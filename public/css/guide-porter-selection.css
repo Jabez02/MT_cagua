@@ -1,0 +1,220 @@
+/* Guide and Porter Selection Styles */
+
+/* Inline Details Cards */
+#guide-details-card,
+#porter-details-card {
+    transition: all 0.3s ease;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#guide-details-card.d-none,
+#porter-details-card.d-none {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+#guide-details-card .card,
+#porter-details-card .card {
+    border-width: 2px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+#guide-details-card .card:hover,
+#porter-details-card .card:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+#guide-details-card .card-body,
+#porter-details-card .card-body {
+    background: #ffffff;
+    border-radius: 6px;
+}
+
+/* Guide card specific styling */
+#guide-details-card .card.border-primary {
+    border-color: #0d6efd !important;
+}
+
+#guide-details-card .card.border-primary .card-body {
+    background: #ffffff;
+    border-left: 4px solid #0d6efd;
+}
+
+/* Porter card specific styling */
+#porter-details-card .card.border-success {
+    border-color: #198754 !important;
+}
+
+#porter-details-card .card.border-success .card-body {
+    background: #ffffff;
+    border-left: 4px solid #198754;
+}
+
+/* Card title styling */
+#guide-details-card .card-title,
+#porter-details-card .card-title {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    margin-bottom: 0;
+}
+
+#guide-details-card .card-title i,
+#porter-details-card .card-title i {
+    font-size: 1.2em;
+}
+
+/* Details Grid Layout */
+.guide-details-grid,
+.porter-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.detail-item:hover {
+    background: #e9ecef;
+    transform: translateX(2px);
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-right: 8px;
+}
+
+.detail-value {
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+/* Full width items for longer content */
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Animation for card appearance */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#guide-details-card:not(.d-none),
+#porter-details-card:not(.d-none) {
+    animation: slideInUp 0.4s ease-out;
+}
+
+/* Porter recommendation highlight */
+#porter-selection.border-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffffff 100%);
+    border-color: #ffc107 !important;
+    border-width: 2px;
+    transition: all 0.3s ease;
+}
+
+#porter-selection.border-warning .form-label {
+    color: #856404;
+}
+
+/* Enhanced select styling */
+#guide_id:focus,
+#porter_id:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    transition: all 0.2s ease;
+}
+
+#guide_id,
+#porter_id {
+    transition: all 0.2s ease;
+}
+
+/* Staff section styling */
+#staff-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border: 1px solid #dee2e6;
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#staff-section .section-title {
+    color: #495057;
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .guide-details-grid,
+    .porter-details-grid {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    
+    .detail-item {
+        padding: 6px 10px;
+    }
+    
+    .detail-label,
+    .detail-value {
+        font-size: 0.85rem;
+    }
+    
+    #guide-details-card .card-body,
+    #porter-details-card .card-body {
+        padding: 1rem;
+    }
+}
+
+/* Loading state (optional enhancement) */
+.card-loading {
+    position: relative;
+    overflow: hidden;
+}
+
+.card-loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}

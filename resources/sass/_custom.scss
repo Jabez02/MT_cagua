@@ -1,0 +1,178 @@
+// Custom styles for cards, buttons, badges, etc.
+
+// Section titles
+.section-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+
+  .section-icon {
+    margin-right: 0.5rem;
+  }
+}
+
+// Info rows
+.info-row {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+
+  @include media-breakpoint-up(sm) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .info-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: $gray-600;
+    margin-bottom: 0.25rem;
+
+    @include media-breakpoint-up(sm) {
+      margin-bottom: 0;
+    }
+  }
+
+  .info-value {
+    font-weight: 500;
+    color: $gray-900;
+  }
+}
+
+// Status badges
+.badge {
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: 2rem;
+}
+
+.badge-approved {
+  background-color: tint-color($success, 90%);
+  color: shade-color($success, 20%);
+  border: 1px solid tint-color($success, 50%);
+}
+
+.badge-rejected {
+  background-color: tint-color($danger, 90%);
+  color: shade-color($danger, 20%);
+  border: 1px solid tint-color($danger, 50%);
+}
+
+.badge-pending {
+  background-color: tint-color($warning, 90%);
+  color: shade-color($warning, 20%);
+  border: 1px solid tint-color($warning, 50%);
+}
+
+// Timeline
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+}
+
+.timeline-item {
+  position: relative;
+  padding-bottom: 1.5rem;
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: -2rem;
+    top: 0.5rem;
+    bottom: 0;
+    width: 2px;
+    background-color: $gray-200;
+  }
+
+  &:last-child::before {
+    display: none;
+  }
+}
+
+.timeline-dot {
+  position: absolute;
+  left: -2.25rem;
+  top: 0.25rem;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: $primary;
+  border: 2px solid $white;
+  box-shadow: 0 0 0 2px $primary;
+
+  &.bg-success {
+    background-color: $success;
+    box-shadow: 0 0 0 2px $success;
+  }
+}
+
+.timeline-content {
+  p {
+    margin-bottom: 0.25rem;
+  }
+}
+
+// Cards
+.card {
+  border-radius: $border-radius-lg;
+  box-shadow: $box-shadow-sm;
+  transition: $transition-base;
+
+  &:hover {
+    box-shadow: $box-shadow;
+  }
+
+  .card-header {
+    background-color: transparent;
+    border-bottom: 1px solid $gray-200;
+    padding: 1rem 1.25rem;
+  }
+}
+
+// Staff cards
+.staff-card {
+  background-color: $gray-100;
+  border-radius: $border-radius;
+  padding: 1rem;
+  transition: $transition-base;
+
+  &:hover {
+    background-color: $gray-200;
+  }
+}
+
+// Buttons
+.btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  border-radius: $border-radius;
+  transition: $transition-base;
+
+  i {
+    margin-right: 0.5rem;
+  }
+}
+
+// Health alert card
+.card.border-danger {
+  .card-header {
+    background-color: $danger;
+    border-bottom: none;
+    border-radius: calc(#{$border-radius-lg} - 1px) calc(#{$border-radius-lg} - 1px) 0 0;
+  }
+}
+
+// Payment info section
+.bg-light {
+  background-color: tint-color($success, 95%) !important;
+  border: 1px solid tint-color($success, 80%);
+}

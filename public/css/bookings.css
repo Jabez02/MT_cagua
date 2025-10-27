@@ -1,0 +1,31 @@
+.form-input {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+}
+
+.form-select {
+    @apply mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500;
+}
+
+.booking-status {
+    @apply px-2 inline-flex text-xs leading-5 font-semibold rounded-full;
+}
+
+.status-approved {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-rejected {
+    @apply bg-red-100 text-red-800;
+}
+
+.status-pending {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.booking-action {
+    @apply text-indigo-600 hover:text-indigo-900;
+}
+
+.booking-action-delete {
+    @apply text-red-600 hover:text-red-900;
+}

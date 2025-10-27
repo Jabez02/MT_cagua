@@ -1,0 +1,122 @@
+/* Main Navigation */
+.nav-main {
+    @apply bg-white border-b border-gray-100;
+}
+
+.nav-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.nav-header {
+    @apply flex justify-between h-16;
+}
+
+.nav-left {
+    @apply flex;
+}
+
+.nav-right {
+    @apply hidden sm:flex sm:items-center sm:ms-6;
+}
+
+/* Logo */
+.nav-logo {
+    @apply shrink-0 flex items-center;
+}
+
+.nav-logo-image {
+    @apply block h-9 w-auto fill-current text-gray-800;
+}
+
+/* Desktop Navigation Links */
+.nav-links-desktop {
+    @apply hidden space-x-8 sm:-my-px sm:ms-10 sm:flex;
+}
+
+.nav-links-group {
+    @apply flex items-center space-x-8;
+}
+
+.nav-link-with-icon {
+    @apply flex items-center;
+}
+
+.nav-link-icon {
+    @apply w-5 h-5 mr-2;
+}
+
+.nav-link-with-badge {
+    @apply relative;
+}
+
+/* Dropdown */
+.nav-dropdown-trigger-button {
+    @apply inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150;
+}
+
+.nav-dropdown-trigger-icon {
+    @apply ms-1;
+}
+
+.nav-dropdown-chevron {
+    @apply fill-current h-4 w-4;
+}
+
+/* Hamburger Menu */
+.nav-hamburger {
+    @apply -me-2 flex items-center sm:hidden;
+}
+
+.nav-hamburger-btn {
+    @apply inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out;
+}
+
+.nav-hamburger-icon {
+    @apply h-6 w-6;
+}
+
+/* Mobile Navigation */
+.nav-mobile {
+    @apply hidden sm:hidden;
+}
+
+.nav-mobile-links {
+    @apply pt-2 pb-3 space-y-1;
+}
+
+.nav-mobile-settings {
+    @apply pt-4 pb-1 border-t border-gray-200;
+}
+
+.nav-mobile-user {
+    @apply px-4;
+}
+
+.nav-mobile-user-name {
+    @apply font-medium text-base text-gray-800;
+}
+
+.nav-mobile-user-email {
+    @apply font-medium text-sm text-gray-500;
+}
+
+.nav-mobile-actions {
+    @apply mt-3 space-y-1;
+}
+
+/* Unread Badge */
+.unread-badge {
+    @apply absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center;
+}
+
+/* Dropdown Link */
+.nav-dropdown-link {
+    @apply block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out;
+}
+
+/* Print Styles */
+@media print {
+    .nav-main {
+        @apply hidden;
+    }
+}

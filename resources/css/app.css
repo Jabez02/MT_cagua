@@ -1,0 +1,11 @@
+@import '../../public/css/navigation.css';
+@import '../../public/css/announcements.css';
+@import '../../public/css/reviews.css';
+@import '../../public/css/hikes.css';
+@import '../../public/css/bookings.css';
+@import '../../public/css/messages.css';
+@import '../../public/css/reports.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

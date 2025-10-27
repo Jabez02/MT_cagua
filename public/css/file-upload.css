@@ -1,0 +1,310 @@
+/* Enhanced File Upload Styles */
+.file-upload-zone {
+    position: relative;
+    transition: all 0.3s ease;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.file-upload-zone:hover {
+    border-color: #6366f1;
+    background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+}
+
+.file-upload-zone.drag-over {
+    border-color: #4f46e5 !important;
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%) !important;
+    transform: scale(1.02);
+    box-shadow: 0 12px 35px rgba(79, 70, 229, 0.25);
+}
+
+.upload-icon {
+    transition: all 0.3s ease;
+}
+
+.file-upload-zone:hover .upload-icon {
+    transform: scale(1.1);
+    color: #6366f1;
+}
+
+/* File List Styles */
+.file-list {
+    margin-top: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.file-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.file-list::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.file-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.file-list::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.file-item {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    transition: all 0.2s ease;
+    animation: slideInUp 0.3s ease-out;
+}
+
+.file-item:hover {
+    border-color: #6366f1;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+    transform: translateY(-1px);
+}
+
+.file-item:last-child {
+    margin-bottom: 0;
+}
+
+/* File Type Icons */
+.file-type-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    flex-shrink: 0;
+}
+
+.file-type-pdf { background: linear-gradient(135deg, #dc2626, #ef4444); }
+.file-type-doc { background: linear-gradient(135deg, #2563eb, #3b82f6); }
+.file-type-image { background: linear-gradient(135deg, #059669, #10b981); }
+.file-type-text { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+.file-type-archive { background: linear-gradient(135deg, #ea580c, #f97316); }
+.file-type-default { background: linear-gradient(135deg, #6b7280, #9ca3af); }
+
+/* Remove Button */
+.remove-file-btn {
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 6px;
+    padding: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-file-btn:hover {
+    background: #fecaca;
+    transform: scale(1.1);
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background-color: #e5e7eb;
+    border-radius: 2px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #6366f1, #8b5cf6);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200px 0; }
+    100% { background-position: calc(200px + 100%) 0; }
+}
+
+/* Animations */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Notification Styles */
+.notification {
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Upload Statistics */
+.upload-stats {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.upload-stats .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.upload-stats .stat-value {
+    font-weight: 600;
+    color: #374151;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .file-upload-zone {
+        padding: 1.5rem 1rem;
+    }
+    
+    .file-upload-zone .text-lg {
+        font-size: 1rem;
+    }
+    
+    .file-upload-zone .text-sm {
+        font-size: 0.75rem;
+    }
+    
+    .file-item {
+        padding: 10px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .file-type-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 12px;
+        margin-right: 8px;
+    }
+    
+    .upload-stats {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+    
+    .upload-stats .stat-item {
+        width: 100%;
+        justify-content: space-between;
+    }
+}
+
+@media (max-width: 480px) {
+    .file-upload-zone {
+        padding: 1rem 0.75rem;
+    }
+    
+    .file-list {
+        max-height: 200px;
+    }
+    
+    .file-item {
+        padding: 8px;
+    }
+    
+    .file-type-icon {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+        margin-right: 6px;
+    }
+    
+    .remove-file-btn {
+        padding: 4px;
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .file-upload-zone {
+        background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        border-color: #475569;
+        color: #e2e8f0;
+    }
+    
+    .file-upload-zone:hover {
+        background: linear-gradient(135deg, #312e81 0%, #3730a3 100%);
+        border-color: #6366f1;
+    }
+    
+    .file-item {
+        background: #1e293b;
+        border-color: #475569;
+        color: #e2e8f0;
+    }
+    
+    .file-item:hover {
+        border-color: #6366f1;
+        background: #334155;
+    }
+    
+    .upload-stats {
+        background: #1e293b;
+        border-color: #475569;
+        color: #94a3b8;
+    }
+    
+    .upload-stats .stat-value {
+        color: #e2e8f0;
+    }
+    
+    .progress-bar {
+        background-color: #374151;
+    }
+}

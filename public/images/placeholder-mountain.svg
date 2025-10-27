@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+    <!-- Background -->
+    <rect width="800" height="600" fill="#e5e7eb"/>
+    
+    <!-- Mountains -->
+    <path d="M0 600 L300 200 L500 400 L800 100 L800 600 Z" fill="#9ca3af"/>
+    <path d="M0 600 L400 300 L600 450 L800 250 L800 600 Z" fill="#6b7280"/>
+    
+    <!-- Sun -->
+    <circle cx="700" cy="100" r="40" fill="#fcd34d"/>
+    
+    <!-- Clouds -->
+    <circle cx="200" cy="150" r="30" fill="#f3f4f6"/>
+    <circle cx="230" cy="150" r="25" fill="#f3f4f6"/>
+    <circle cx="180" cy="160" r="25" fill="#f3f4f6"/>
+    
+    <circle cx="600" cy="200" r="35" fill="#f3f4f6"/>
+    <circle cx="630" cy="200" r="30" fill="#f3f4f6"/>
+    <circle cx="580" cy="210" r="30" fill="#f3f4f6"/>
+</svg>

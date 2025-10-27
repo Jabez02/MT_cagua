@@ -1,0 +1,443 @@
+/* Enhanced Attachment Styles */
+.attachment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.attachment-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.attachment-title i {
+    color: #4f46e5;
+    font-size: 1.5rem;
+}
+
+.attachment-count {
+    background: #4f46e5;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    animation: pulse-badge 2s infinite;
+}
+
+.attachment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.attachment-card {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.5s ease-out;
+}
+
+.attachment-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: #4f46e5;
+}
+
+.attachment-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #4f46e5, #7c3aed);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.attachment-card:hover::before {
+    transform: scaleX(1);
+}
+
+.attachment-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    margin-bottom: 1rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.attachment-icon {
+    font-size: 2rem;
+    z-index: 2;
+    position: relative;
+}
+
+/* File type specific colors */
+.file-type-pdf .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+}
+
+.file-type-pdf .attachment-icon {
+    color: #dc2626;
+}
+
+.file-type-doc .attachment-icon-wrapper,
+.file-type-docx .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+}
+
+.file-type-doc .attachment-icon,
+.file-type-docx .attachment-icon {
+    color: #2563eb;
+}
+
+.file-type-xls .attachment-icon-wrapper,
+.file-type-xlsx .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+}
+
+.file-type-xls .attachment-icon,
+.file-type-xlsx .attachment-icon {
+    color: #16a34a;
+}
+
+.file-type-ppt .attachment-icon-wrapper,
+.file-type-pptx .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #fed7aa, #fdba74);
+}
+
+.file-type-ppt .attachment-icon,
+.file-type-pptx .attachment-icon {
+    color: #ea580c;
+}
+
+.file-type-zip .attachment-icon-wrapper,
+.file-type-rar .attachment-icon-wrapper,
+.file-type-7z .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+}
+
+.file-type-zip .attachment-icon,
+.file-type-rar .attachment-icon,
+.file-type-7z .attachment-icon {
+    color: #d97706;
+}
+
+.file-type-jpg .attachment-icon-wrapper,
+.file-type-jpeg .attachment-icon-wrapper,
+.file-type-png .attachment-icon-wrapper,
+.file-type-gif .attachment-icon-wrapper,
+.file-type-webp .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+}
+
+.file-type-jpg .attachment-icon,
+.file-type-jpeg .attachment-icon,
+.file-type-png .attachment-icon,
+.file-type-gif .attachment-icon,
+.file-type-webp .attachment-icon {
+    color: #4f46e5;
+}
+
+.file-type-txt .attachment-icon-wrapper {
+    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+}
+
+.file-type-txt .attachment-icon {
+    color: #6b7280;
+}
+
+.attachment-info {
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+.attachment-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.attachment-meta {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.attachment-size {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.attachment-type {
+    background: #f3f4f6;
+    color: #374151;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.attachment-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 1rem;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn-download {
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    color: white;
+    box-shadow: 0 2px 4px rgba(79, 70, 229, 0.2);
+}
+
+.btn-download:hover {
+    background: linear-gradient(135deg, #4338ca, #6d28d9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(79, 70, 229, 0.3);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-preview {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+}
+
+.btn-preview:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.attachment-preview {
+    margin-top: 1rem;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f9fafb;
+    border: 2px dashed #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.attachment-preview:hover {
+    border-color: #4f46e5;
+    background: #f0f9ff;
+}
+
+.image-preview-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.image-preview-placeholder:hover {
+    color: #4f46e5;
+}
+
+.image-preview-placeholder i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.image-preview-placeholder span {
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.attachment-count-badge {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Image Preview Modal Styles */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.image-modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.image-modal-content {
+    max-width: 90%;
+    max-height: 90%;
+    position: relative;
+    animation: zoomIn 0.3s ease;
+}
+
+@keyframes zoomIn {
+    from { transform: scale(0.5); }
+    to { transform: scale(1); }
+}
+
+.image-modal img {
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 8px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.image-modal-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* File Type Specific Styles */
+.file-type-pdf .icon-wrapper {
+    background: linear-gradient(135deg, #dc3545, #c82333) !important;
+}
+
+.file-type-word .icon-wrapper {
+    background: linear-gradient(135deg, #0dcaf0, #0aa2c0) !important;
+}
+
+.file-type-excel .icon-wrapper {
+    background: linear-gradient(135deg, #198754, #146c43) !important;
+}
+
+.file-type-image .icon-wrapper {
+    background: linear-gradient(135deg, #6f42c1, #5a2d91) !important;
+}
+
+.file-type-archive .icon-wrapper {
+    background: linear-gradient(135deg, #fd7e14, #e55a00) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .attachment-card {
+        margin-bottom: 1rem;
+    }
+    
+    .icon-wrapper {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .attachment-card h6 {
+        font-size: 0.9rem;
+    }
+}
+
+/* Loading Animation */
+.loading-spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: #fff;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
