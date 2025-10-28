@@ -11,9 +11,6 @@
                 <a href="{{ route('user.bookings.create') }}" class="btn btn-primary btn-sm rounded-pill px-3">
                     <i class="bi bi-plus-lg me-1"></i>{{ __('Create Booking') }}
                 </a>
-                <a href="{{ route('hikes.index') }}" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                    <i class="bi bi-list me-1"></i>{{ __('Browse Hikes') }}
-                </a>
             </div>
         </div>
     </x-slot>
@@ -502,22 +499,11 @@
                                     <div class="flex-grow-1">
                                         <h4 class="fs-5 fw-bold text-primary mb-1">
                                             <i class="bi bi-geo-alt me-2"></i>
-                                            @if($booking->hike)
-                                                {{ $booking->hike->trail }}
-                                            @else
-                                                {{ $booking->trail ?? 'Custom Booking' }}
-                                            @endif
+                                            {{ $booking->trail ?? 'Custom Booking' }}
                                         </h4>
                                         <p class="text-muted mb-0">
                                             <i class="bi bi-calendar3 me-1"></i>
-                                            @if($booking->hike)
-                                                {{ $booking->hike->date->format('l, F j, Y') }} at {{ $booking->hike->start_time->format('h:i A') }}
-                                            @else
-                                                {{ $booking->trek_date ? $booking->trek_date->format('l, F j, Y') : 'Date not specified' }}
-                                                @if($booking->start_time)
-                                                    at {{ $booking->start_time->format('h:i A') }}
-                                                @endif
-                                            @endif
+                                            {{ \Carbon\Carbon::parse($booking->trek_date)->format('l, F j, Y') }} at {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}
                                         </p>
                                     </div>
                                     <div class="text-end">
@@ -619,18 +605,18 @@
                                             <a href="{{ route('user.bookings.show', $booking) }}" 
                                                class="action-btn btn-view text-decoration-none text-center"
                                                role="button"
-                                               aria-label="View details for {{ $booking->hike ? $booking->hike->trail : 'Custom' }} booking">
+                                               aria-label="View details for {{ $booking->trail ?? 'Custom' }} booking">
                                                 <i class="bi bi-eye me-1" aria-hidden="true"></i>View Details
                                             </a>
-                                            @if($booking->status === 'completed' && $booking->hike)
+                                            @if($booking->status === 'completed')
                                                 @php
-                                                    $hasReviewed = $booking->user->reviews()->where('hike_id', $booking->hike->id)->exists();
+                                                    $hasReviewed = $booking->user->reviews()->where('booking_id', $booking->id)->exists();
                                                 @endphp
                                                 @if(!$hasReviewed)
-                                                    <a href="{{ route('user.reviews.create', $booking->hike) }}" 
+                                                    <a href="{{ route('user.reviews.create', $booking) }}"
                                                        class="action-btn btn-review text-decoration-none text-center"
                                                        role="button"
-                                                       aria-label="Write review for {{ $booking->hike->trail }}">
+                                                       aria-label="Write review for {{ $booking->trail }}">
                                                         <i class="bi bi-star me-1" aria-hidden="true"></i>Write Review
                                                     </a>
                                                 @else
@@ -643,7 +629,7 @@
                                                 <button type="button" 
                                                         class="action-btn btn-cancel"
                                                         onclick="showCancelModal('{{ $booking->id }}')"
-                                                        aria-label="Cancel booking for {{ $booking->hike ? $booking->hike->trail : 'Custom' }}">
+                                                        aria-label="Cancel booking for {{ $booking->trail ?? 'Custom' }}">
                                                     <i class="bi bi-x-lg me-1" aria-hidden="true"></i>Cancel Booking
                                                 </button>
                                             @endif
@@ -661,8 +647,8 @@
                             </div>
                             <h3 class="fs-4 fw-bold text-muted mb-3">No Bookings Found</h3>
                             <p class="text-muted mb-4">You haven't made any bookings yet. Start exploring our amazing hiking trails!</p>
-                            <a href="{{ route('hikes.index') }}" class="btn btn-primary btn-lg rounded-pill px-4">
-                                <i class="bi bi-plus-lg me-2"></i>Book Your First Hike
+                            <a href="{{ route('user.bookings.create') }}" class="btn btn-primary btn-lg rounded-pill px-4">
+                    <i class="bi bi-plus-lg me-2"></i>Book Your First Trek
                             </a>
                         </div>
                     </div>

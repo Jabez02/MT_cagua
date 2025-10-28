@@ -22,7 +22,7 @@ class BookingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $query = Booking::with(['user', 'hike', 'guide', 'porter', 'approver']);
+        $query = Booking::with(['user', 'guide', 'porter', 'approver']);
 
         // Apply search filter
         if ($request->filled('search')) {
@@ -33,9 +33,6 @@ class BookingController extends Controller
                       $userQuery->where('name', 'like', "%{$search}%")
                                ->orWhere('email', 'like', "%{$search}%");
                   })
-                  ->orWhereHas('hike', function($hikeQuery) use ($search) {
-                      $hikeQuery->where('name', 'like', "%{$search}%");
-                  })
                   ->orWhere('trail', 'like', "%{$search}%");
             });
         }
@@ -45,14 +42,8 @@ class BookingController extends Controller
             $query->where('status', $request->status);
         }
 
-        // Apply booking type filter
-        if ($request->filled('booking_type')) {
-            if ($request->booking_type === 'custom') {
-                $query->whereNull('hike_id');
-            } elseif ($request->booking_type === 'regular') {
-                $query->whereNotNull('hike_id');
-            }
-        }
+        // Apply booking type filter - all bookings are now custom
+        // This filter is no longer needed as all bookings are custom
 
         // Apply date range filter
         if ($request->filled('date_range')) {
@@ -92,7 +83,7 @@ class BookingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $bookings = Booking::with(['user', 'hike', 'guide', 'porter', 'approver'])
+        $bookings = Booking::with(['user', 'guide', 'porter', 'approver'])
                         ->orderBy('created_at', 'desc')
                         ->get();
 
@@ -101,7 +92,7 @@ class BookingController extends Controller
             'ID',
             'User Name',
             'User Email',
-            'Hike Name',
+            'Trail',
             'Foreign Tourists',
             'Local Tourists',
             'Length of Stay',
@@ -129,7 +120,7 @@ class BookingController extends Controller
                 $booking->id,
                 $booking->user->name ?? 'N/A',
                 $booking->user->email ?? 'N/A',
-                $booking->hike->name ?? 'N/A',
+                $booking->trail ?? 'N/A',
                 $booking->foreign_tourists,
                 $booking->local_tourists,
                 ucfirst(str_replace('_', ' ', $booking->length_of_stay)),
@@ -177,46 +168,17 @@ class BookingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Handle custom bookings (no hike_id) differently
-        if ($booking->hike_id === null) {
-            // For custom bookings, approve and set to payment_pending
-            $booking->update([
-                'status' => 'payment_pending',
-                'approved_at' => Carbon::now(),
-                'approved_by' => Auth::id()
-            ]);
-
-            // Send notification to the user
-            $booking->user->notify(new CustomBookingApproved($booking));
-
-            return back()->with('success', 'Custom booking approved successfully. Customer can now proceed with payment.');
-        }
-
-        // For regular bookings, check if booking has payment proof submitted
-        $payment = $booking->payments()->first();
-        
-        if (!$payment || $payment->status !== 'pending') {
-            return back()->with('error', 'Cannot approve booking without verified payment proof.');
-        }
-
-        // Verify payment and approve booking in one action
-        $payment->update([
-            'status' => 'completed',
-            'verified_at' => now(),
-            'verified_by' => auth()->id(),
-            'payment_data' => array_merge($payment->payment_data ?? [], [
-                'verification_date' => now()->toDateTimeString(),
-                'verified_by' => auth()->id(),
-            ]),
-        ]);
-
+        // All bookings are now custom bookings
         $booking->update([
-            'status' => 'confirmed',
+            'status' => 'payment_pending',
             'approved_at' => Carbon::now(),
             'approved_by' => Auth::id()
         ]);
 
-        return back()->with('success', 'Payment verified and booking approved successfully.');
+        // Send notification to the user
+        $booking->user->notify(new CustomBookingApproved($booking));
+
+        return back()->with('success', 'Booking approved successfully. Customer can now proceed with payment.');
     }
 
     public function reject(Booking $booking)
@@ -231,14 +193,9 @@ class BookingController extends Controller
             'approved_by' => Auth::id()
         ]);
 
-        // For custom bookings, provide specific feedback and send notification
-        if ($booking->hike_id === null) {
-            // Send notification to the user
-            $booking->user->notify(new CustomBookingRejected($booking, 'Your custom booking request did not meet our requirements.'));
-            
-            return back()->with('success', 'Custom booking has been rejected successfully.');
-        }
-
+        // Send notification to the user
+        $booking->user->notify(new CustomBookingRejected($booking, 'Your booking request did not meet our requirements.'));
+        
         return back()->with('success', 'Booking has been rejected successfully.');
     }
 
@@ -258,8 +215,18 @@ class BookingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $guides = Guide::where('status', 'active')->get();
-        $porters = Porter::where('status', 'active')->get();
+        // Get available guides and porters for the booking date
+        $guides = Guide::availableOnDate($booking->trek_date)->get();
+        $porters = Porter::availableOnDate($booking->trek_date)->get();
+
+        // Include currently assigned guide and porter even if they have conflicts
+        if ($booking->guide && !$guides->contains($booking->guide)) {
+            $guides->push($booking->guide);
+        }
+        if ($booking->porter && !$porters->contains($booking->porter)) {
+            $porters->push($booking->porter);
+        }
+        
         $booking->load(['user', 'guide', 'porter']);
 
         return view('admin.bookings.edit', compact('booking', 'guides', 'porters'));
@@ -277,12 +244,40 @@ class BookingController extends Controller
             'porter_id' => ['nullable', 'exists:porters,id'],
         ]);
 
+        // Check for guide conflicts
+        if ($request->filled('guide_id') && $request->guide_id != $booking->guide_id) {
+            $guide = Guide::find($request->guide_id);
+            if ($guide && !$guide->isAvailableOnDate($booking->trek_date)) {
+                $conflictingBookings = $guide->getBookingsForDate($booking->trek_date)
+                    ->where('id', '!=', $booking->id);
+                
+                return back()->withErrors([
+                    'guide_id' => 'This guide is already assigned to another booking on ' . $booking->trek_date . '. ' .
+                                 'Conflicting bookings: ' . $conflictingBookings->pluck('id')->implode(', ')
+                ])->withInput();
+            }
+        }
+
+        // Check for porter conflicts
+        if ($request->filled('porter_id') && $request->porter_id != $booking->porter_id) {
+            $porter = Porter::find($request->porter_id);
+            if ($porter && !$porter->isAvailableOnDate($booking->trek_date)) {
+                $conflictingBookings = $porter->getBookingsForDate($booking->trek_date)
+                    ->where('id', '!=', $booking->id);
+                
+                return back()->withErrors([
+                    'porter_id' => 'This porter is already assigned to another booking on ' . $booking->trek_date . '. ' .
+                                  'Conflicting bookings: ' . $conflictingBookings->pluck('id')->implode(', ')
+                ])->withInput();
+            }
+        }
+
         // Calculate guide fee
         $guideFee = 0;
         if ($validated['guide_id']) {
             $guide = Guide::find($validated['guide_id']);
             if ($guide) {
-                $guideFee = $guide->rate_per_day * $booking->length_of_stay;
+                $guideFee = $guide->rate_per_day * $booking->getLengthOfStayInDays();
             }
         }
 
@@ -291,7 +286,7 @@ class BookingController extends Controller
         if ($validated['porter_id']) {
             $porter = Porter::find($validated['porter_id']);
             if ($porter) {
-                $porterFee = $porter->rate_per_day * $booking->length_of_stay;
+                $porterFee = $porter->rate_per_day * $booking->getLengthOfStayInDays();
             }
         }
 
@@ -351,12 +346,6 @@ class BookingController extends Controller
                     'approved_by' => null
                 ]);
 
-                // Decrease the hike's current bookings count (only for regular bookings)
-                if ($booking->hike) {
-                    $booking->hike->decrement('current_bookings', 
-                        $booking->foreign_tourists + $booking->local_tourists);
-                }
-
                 return back()->with('success', 'Booking cancelled and refund processed successfully. Customer will receive refund within 3-5 business days.');
             }
 
@@ -367,12 +356,6 @@ class BookingController extends Controller
                 'approved_at' => null,
                 'approved_by' => null
             ]);
-
-            // Decrease the hike's current bookings count (only for regular bookings)
-            if ($booking->hike) {
-                $booking->hike->decrement('current_bookings', 
-                    $booking->foreign_tourists + $booking->local_tourists);
-            }
 
             return back()->with('success', 'Booking has been cancelled successfully.');
             
@@ -539,6 +522,45 @@ class BookingController extends Controller
             ]);
             
             return back()->with('error', 'Failed to reject payment. Please try again.');
+        }
+    }
+
+    public function complete(Booking $booking)
+    {
+        if (auth()->user()->usertype !== 'admin') {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Only allow completion of confirmed bookings
+        if ($booking->status !== 'confirmed') {
+            return back()->with('error', 'Only confirmed bookings can be marked as completed.');
+        }
+
+        try {
+            $booking->update([
+                'status' => 'completed',
+                'completed_at' => now(),
+                'completed_by' => auth()->id()
+            ]);
+
+            // Log the completion action
+            \Log::info('Booking marked as completed', [
+                'booking_id' => $booking->id,
+                'completed_by' => auth()->id(),
+                'trek_date' => $booking->trek_date,
+                'guide_id' => $booking->guide_id,
+                'porter_id' => $booking->porter_id
+            ]);
+
+            return back()->with('success', 'Booking has been marked as completed successfully. Guide and porter are now available for new bookings.');
+
+        } catch (\Exception $e) {
+            \Log::error('Booking completion failed: ' . $e->getMessage(), [
+                'booking_id' => $booking->id,
+                'admin_id' => auth()->id()
+            ]);
+            
+            return back()->with('error', 'Failed to mark booking as completed. Please try again.');
         }
     }
 }

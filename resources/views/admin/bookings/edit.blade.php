@@ -635,18 +635,39 @@
                                 <select name="guide_id" id="guide_id" class="form-select-modern">
                                     <option value="">{{ __('Select a guide...') }}</option>
                                     @foreach($guides as $guide)
-                                        <option value="{{ $guide->id }}" {{ $booking->guide_id == $guide->id ? 'selected' : '' }}>
+                                        @php
+                                            $isAvailable = $guide->isAvailableOnDate($booking->start_date);
+                                            $conflictingBookings = $guide->getBookingsForDate($booking->start_date)->where('id', '!=', $booking->id);
+                                            $isCurrentlyAssigned = $booking->guide_id == $guide->id;
+                                        @endphp
+                                        <option value="{{ $guide->id }}" 
+                                                {{ $isCurrentlyAssigned ? 'selected' : '' }}
+                                                data-available="{{ $isAvailable ? 'true' : 'false' }}"
+                                                data-conflicts="{{ $conflictingBookings->count() }}"
+                                                @if(!$isAvailable && !$isCurrentlyAssigned) style="color: #dc3545;" @endif>
                                             {{ $guide->name }} - {{ $guide->contact_number }}
+                                            @if(!$isAvailable && !$isCurrentlyAssigned)
+                                                ({{ __('Unavailable - :count conflicts', ['count' => $conflictingBookings->count()]) }})
+                                            @elseif($isCurrentlyAssigned && !$isAvailable)
+                                                ({{ __('Current - Has conflicts') }})
+                                            @elseif($isAvailable)
+                                                ({{ __('Available') }})
+                                            @endif
                                         </option>
                                     @endforeach
                                 </select>
                                 <div class="form-help-text">
                                     {{ __('Choose a guide to lead this hiking expedition') }}
+                                    <br><small class="text-muted">{{ __('Red options indicate guides with booking conflicts on this date') }}</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             @if($booking->guide)
+                                @php
+                                    $guideAvailable = $booking->guide->isAvailableOnDate($booking->start_date);
+                                    $guideConflicts = $booking->guide->getBookingsForDate($booking->start_date)->where('id', '!=', $booking->id);
+                                @endphp
                                 <div class="info-display">
                                     <div class="info-row">
                                         <span class="info-label">{{ __('Current Guide') }}</span>
@@ -656,6 +677,28 @@
                                         <span class="info-label">{{ __('Contact') }}</span>
                                         <span class="info-value">{{ $booking->guide->contact_number }}</span>
                                     </div>
+                                    <div class="info-row">
+                                        <span class="info-label">{{ __('Availability Status') }}</span>
+                                        <span class="info-value">
+                                            @if($guideAvailable)
+                                                <span class="badge bg-success">{{ __('Available') }}</span>
+                                            @else
+                                                <span class="badge bg-warning">{{ __('Has Conflicts') }}</span>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    @if(!$guideAvailable && $guideConflicts->count() > 0)
+                                        <div class="info-row">
+                                            <span class="info-label">{{ __('Conflicting Bookings') }}</span>
+                                            <span class="info-value">
+                                                @foreach($guideConflicts as $conflict)
+                                                    <small class="d-block text-danger">
+                                                        #{{ $conflict->id }} - {{ $conflict->user->name ?? 'N/A' }}
+                                                    </small>
+                                                @endforeach
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -679,18 +722,39 @@
                                 <select name="porter_id" id="porter_id" class="form-select-modern">
                                     <option value="">{{ __('Select a porter...') }}</option>
                                     @foreach($porters as $porter)
-                                        <option value="{{ $porter->id }}" {{ $booking->porter_id == $porter->id ? 'selected' : '' }}>
+                                        @php
+                                            $isAvailable = $porter->isAvailableOnDate($booking->start_date);
+                                            $conflictingBookings = $porter->getBookingsForDate($booking->start_date)->where('id', '!=', $booking->id);
+                                            $isCurrentlyAssigned = $booking->porter_id == $porter->id;
+                                        @endphp
+                                        <option value="{{ $porter->id }}" 
+                                                {{ $isCurrentlyAssigned ? 'selected' : '' }}
+                                                data-available="{{ $isAvailable ? 'true' : 'false' }}"
+                                                data-conflicts="{{ $conflictingBookings->count() }}"
+                                                @if(!$isAvailable && !$isCurrentlyAssigned) style="color: #dc3545;" @endif>
                                             {{ $porter->name }} - {{ $porter->contact_number }}
+                                            @if(!$isAvailable && !$isCurrentlyAssigned)
+                                                ({{ __('Unavailable - :count conflicts', ['count' => $conflictingBookings->count()]) }})
+                                            @elseif($isCurrentlyAssigned && !$isAvailable)
+                                                ({{ __('Current - Has conflicts') }})
+                                            @elseif($isAvailable)
+                                                ({{ __('Available') }})
+                                            @endif
                                         </option>
                                     @endforeach
                                 </select>
                                 <div class="form-help-text">
                                     {{ __('Choose a porter to assist with equipment and supplies') }}
+                                    <br><small class="text-muted">{{ __('Red options indicate porters with booking conflicts on this date') }}</small>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-4">
                             @if($booking->porter)
+                                @php
+                                    $porterAvailable = $booking->porter->isAvailableOnDate($booking->start_date);
+                                    $porterConflicts = $booking->porter->getBookingsForDate($booking->start_date)->where('id', '!=', $booking->id);
+                                @endphp
                                 <div class="info-display">
                                     <div class="info-row">
                                         <span class="info-label">{{ __('Current Porter') }}</span>
@@ -700,6 +764,28 @@
                                         <span class="info-label">{{ __('Contact') }}</span>
                                         <span class="info-value">{{ $booking->porter->contact_number }}</span>
                                     </div>
+                                    <div class="info-row">
+                                        <span class="info-label">{{ __('Availability Status') }}</span>
+                                        <span class="info-value">
+                                            @if($porterAvailable)
+                                                <span class="badge bg-success">{{ __('Available') }}</span>
+                                            @else
+                                                <span class="badge bg-warning">{{ __('Has Conflicts') }}</span>
+                                            @endif
+                                        </span>
+                                    </div>
+                                    @if(!$porterAvailable && $porterConflicts->count() > 0)
+                                        <div class="info-row">
+                                            <span class="info-label">{{ __('Conflicting Bookings') }}</span>
+                                            <span class="info-value">
+                                                @foreach($porterConflicts as $conflict)
+                                                    <small class="d-block text-danger">
+                                                        #{{ $conflict->id }} - {{ $conflict->user->name ?? 'N/A' }}
+                                                    </small>
+                                                @endforeach
+                                            </span>
+                                        </div>
+                                    @endif
                                 </div>
                             @endif
                         </div>
@@ -713,6 +799,17 @@
                     <i class="bi bi-x-circle"></i>
                     {{ __('Cancel') }}
                 </a>
+                @if($booking->status === 'confirmed')
+                    <form action="{{ route('admin.bookings.complete', $booking) }}" method="POST" class="d-inline me-2">
+                        @csrf
+                        @method('PATCH')
+                        <button type="submit" class="btn-modern btn-success" 
+                                onclick="return confirm('Are you sure you want to mark this booking as completed? This will free up the assigned guide and porter.')">
+                            <i class="bi bi-check-circle"></i>
+                            {{ __('Mark as Completed') }}
+                        </button>
+                    </form>
+                @endif
                 <button type="submit" class="btn-modern btn-primary">
                     <i class="bi bi-check-circle"></i>
                     {{ __('Update Booking') }}

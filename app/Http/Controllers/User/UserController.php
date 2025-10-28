@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Booking;
 use App\Models\Announcement;
-use App\Models\Hike;
 use App\Models\Payment;
 use App\Models\Message;
 
@@ -37,17 +36,9 @@ class UserController extends Controller
             ->count();
 
         // Lists
-        $upcomingBookings = Booking::with('hike')
-            ->where('user_id', $user->id)
+        $upcomingBookings = Booking::where('user_id', $user->id)
             ->whereIn('status', ['pending', 'approved'])
             ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
-        $availableHikes = Hike::where('status', 'open')
-            ->where('date', '>=', now()->toDateString())
-            ->orderBy('date', 'asc')
-            ->orderBy('start_time', 'asc')
             ->take(3)
             ->get();
 
@@ -67,7 +58,6 @@ class UserController extends Controller
             'user',
             'stats',
             'upcomingBookings',
-            'availableHikes',
             'latestAnnouncements'
         ));
     }

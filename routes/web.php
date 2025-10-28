@@ -1,28 +1,29 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\User\UserController;
-use App\Http\Controllers\User\BookingController;
-use App\Http\Controllers\Admin\ReportController;
-use App\Http\Controllers\Admin\ManageUserController;
-use App\Http\Controllers\Admin\HikeController;
-use App\Http\Controllers\User\UserProfileController;
-use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\ReviewController as AdminReviewController;
-use App\Http\Controllers\User\MessageController;
-use App\Http\Controllers\Admin\MessageController as AdminMessageController;
-use App\Http\Controllers\User\AnnouncementController;
-use App\Http\Controllers\Admin\AnnouncementController as AdminAnnouncementController;
-use App\Http\Controllers\PublicHikeController;
-use App\Http\Controllers\Admin\PaymentController;
-use App\Http\Controllers\Admin\PaymentMethodController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\GuideController;
 use App\Http\Controllers\Admin\PorterController;
+use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\ManageUserController;
+use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\BookingController;
+use App\Http\Controllers\User\ReviewController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\User\UserProfileController;
+use App\Http\Controllers\User\MessageController;
+use App\Http\Controllers\User\AnnouncementController;
+use App\Http\Controllers\Admin\MessageController as AdminMessageController;
+use App\Http\Controllers\Admin\AnnouncementController as AdminAnnouncementController;
+use App\Http\Controllers\Admin\PaymentMethodController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Broadcast;
-use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 
 // Broadcasting Routes
 Broadcast::routes(['middleware' => ['web', 'auth']]);
@@ -30,9 +31,7 @@ Broadcast::routes(['middleware' => ['web', 'auth']]);
 // Frontend Routes
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-// Public Hike Routes
-Route::get('/hikes', [PublicHikeController::class, 'index'])->name('hikes.index');
-Route::get('/hikes/{hike}', [PublicHikeController::class, 'show'])->name('hikes.show');
+
 
 Route::get('/about', [App\Http\Controllers\AboutController::class, 'index'])->name('about');
 
@@ -54,7 +53,7 @@ Route::middleware(['auth', 'verified', 'userMiddleware'])->group(function () {
         // Booking Routes
         Route::get('bookings', [BookingController::class, 'index'])->name('user.bookings.index');
         Route::get('bookings/create', [BookingController::class, 'create'])->name('user.bookings.create');
-        Route::get('bookings/create/{hike}', [BookingController::class, 'create'])->name('user.bookings.create');
+        Route::get('bookings/create', [BookingController::class, 'create'])->name('user.bookings.create');
         Route::post('bookings', [BookingController::class, 'store'])->name('user.bookings.store');
         Route::get('bookings/{booking}', [BookingController::class, 'show'])->name('user.bookings.show');
         Route::get('bookings/{booking}/payment', [BookingController::class, 'payment'])->name('user.bookings.payment');
@@ -69,8 +68,8 @@ Route::middleware(['auth', 'verified', 'userMiddleware'])->group(function () {
 
         // Review Routes
         Route::get('/reviews', [ReviewController::class, 'index'])->name('user.reviews.index');
-        Route::get('/reviews/create/{hike}', [ReviewController::class, 'create'])->name('user.reviews.create');
-        Route::post('/reviews/{hike}', [ReviewController::class, 'store'])->name('user.reviews.store');
+        Route::get('/reviews/create', [ReviewController::class, 'create'])->name('user.reviews.create');
+        Route::post('/reviews', [ReviewController::class, 'store'])->name('user.reviews.store');
         Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('user.reviews.show');
         Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('user.reviews.edit');
         Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('user.reviews.update');
@@ -131,10 +130,9 @@ Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->name('admin.')-
         Route::patch('/bookings/{booking}/cancel', [AdminBookingController::class, 'cancel'])->name('bookings.cancel');
         Route::patch('/bookings/{booking}/verify-payment', [AdminBookingController::class, 'verifyPayment'])->name('bookings.verify-payment');
         Route::patch('/bookings/{booking}/reject-payment', [AdminBookingController::class, 'rejectPayment'])->name('bookings.reject-payment');
+        Route::patch('/bookings/{booking}/complete', [AdminBookingController::class, 'complete'])->name('bookings.complete');
 
-        // Hike Management Routes
-        Route::resource('hikes', HikeController::class);
-        Route::get('/hikes/{hike}/print', [HikeController::class, 'print'])->name('hikes.print');
+
 
         // Review Management Routes
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');

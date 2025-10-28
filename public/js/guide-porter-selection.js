@@ -38,14 +38,14 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Extract guide information from the option
         const guideName = selectedOption.textContent.split(' (')[0].trim();
-        const totalHikes = selectedOption.dataset.totalHikes || 'N/A';
+        const totalTreks = selectedOption.dataset.totalTreks || 'N/A';
         const specializations = selectedOption.dataset.specializations || '';
         const contact = selectedOption.dataset.contact || 'N/A';
         const experience = selectedOption.dataset.experience || 'N/A';
         
         // Populate the card with guide details
         document.getElementById('guide-name').textContent = guideName;
-        document.getElementById('guide-total-hikes').textContent = totalHikes + ' hikes';
+        document.getElementById('guide-total-treks').textContent = totalTreks + ' treks';
         document.getElementById('guide-contact').textContent = contact;
         document.getElementById('guide-experience').textContent = experience + ' years';
         
@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Extract porter information from the option
         const porterName = selectedOption.textContent.split(' (')[0].trim();
         const capacity = selectedOption.dataset.capacity || 'N/A';
-        const totalHikes = selectedOption.dataset.totalHikes || 'N/A';
+        const totalTreks = selectedOption.dataset.totalTreks || 'N/A';
         const contact = selectedOption.dataset.contact || 'N/A';
         const experience = selectedOption.dataset.experience || 'N/A';
         
         // Populate the card with porter details
         document.getElementById('porter-name').textContent = porterName;
         document.getElementById('porter-capacity').textContent = capacity + ' kg';
-        document.getElementById('porter-total-hikes').textContent = totalHikes + ' hikes';
+        document.getElementById('porter-total-treks').textContent = totalTreks + ' treks';
         document.getElementById('porter-contact').textContent = contact;
         document.getElementById('porter-experience').textContent = experience + ' years';
         
@@ -114,13 +114,13 @@ document.addEventListener('DOMContentLoaded', function() {
         if (lengthOfStay === 'overnight') {
             porterLabel.innerHTML = `
                 Select Porter
-                <span class="text-warning">(Highly Recommended for overnight hikes)</span>
+                <span class="text-warning">(Highly Recommended for overnight treks)</span>
             `;
             porterSection.classList.add('border-warning', 'rounded', 'p-3');
         } else {
             porterLabel.innerHTML = `
                 Select Porter
-                <span class="text-muted">(Optional - Recommended for overnight hikes)</span>
+                <span class="text-muted">(Optional - Recommended for overnight treks)</span>
             `;
             porterSection.classList.remove('border-warning', 'rounded', 'p-3');
         }

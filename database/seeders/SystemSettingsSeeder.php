@@ -25,7 +25,7 @@ class SystemSettingsSeeder extends Seeder
         $this->createSetting('feature3_description', 'Feature 3 Description', 'We work with local communities to promote sustainable tourism and support economic growth.', 'textarea', 'general', true);
         
         $this->createSetting('cta_title', 'CTA Title', 'Ready for Your Next Adventure?', 'text', 'general', true);
-        $this->createSetting('cta_description', 'CTA Description', 'Join us for an unforgettable hiking experience at Mt. Cagua. Book your hike today!', 'textarea', 'general', true);
+        $this->createSetting('cta_description', 'CTA Description', 'Join us for an unforgettable trekking experience at Mt. Cagua. Book your trek today!', 'textarea', 'general', true);
         
         // About Settings
         $this->createSetting('about_title', 'About Section Title', 'About Mt. Cagua', 'text', 'about', true);

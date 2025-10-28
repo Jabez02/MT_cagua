@@ -15,7 +15,7 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Review::with(['user', 'hike', 'moderator']);
+        $query = Review::with(['user', 'moderator']);
 
         // Apply filters
         switch ($request->filter) {
@@ -40,7 +40,7 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        $review->load(['user', 'hike', 'moderator']);
+        $review->load(['user', 'moderator']);
         return view('admin.reviews.show', compact('review'));
     }
 

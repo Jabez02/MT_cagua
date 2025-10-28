@@ -60,7 +60,7 @@ class PorterController extends Controller
         }
 
         $porter->load(['bookings' => function($query) {
-            $query->with(['hike', 'user'])->latest()->take(10);
+            $query->with(['user'])->latest()->take(10);
         }]);
 
         return view('admin.porters.show', compact('porter'));

@@ -57,7 +57,7 @@ class GuideController extends Controller
         }
 
         $guide->load(['bookings' => function($query) {
-            $query->with(['hike', 'user'])->latest()->take(10);
+            $query->with(['user'])->latest()->take(10);
         }]);
 
         return view('admin.guides.show', compact('guide'));

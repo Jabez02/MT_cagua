@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('address');
             $table->enum('status', ['available', 'assigned', 'unavailable'])->default('available');
             $table->text('specializations')->nullable();
-            $table->integer('total_hikes')->default(0);
+            $table->integer('total_treks')->default(0);
             $table->timestamps();
         });
     }

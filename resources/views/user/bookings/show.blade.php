@@ -1,4 +1,4 @@
-@push('styles')
+<x-app-layout>
 <style>
     /* Modern UI Variables */
     :root {
@@ -101,106 +101,328 @@
         margin-top: var(--space-6);
     }
 
-    .header-btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+    .btn-back {
+        background: rgba(255, 255, 255, 0.1);
         color: white;
-        padding: var(--space-3) var(--space-6);
-        border-radius: var(--radius-lg);
         text-decoration: none;
-        font-weight: var(--font-weight-semibold);
-        font-size: var(--font-size-sm);
-        display: inline-flex;
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
         align-items: center;
         gap: var(--space-2);
-        transition: var(--transition-bounce);
+        font-weight: var(--font-weight-medium);
+        transition: var(--transition-base);
         backdrop-filter: blur(10px);
     }
 
-    .header-btn:hover {
-        background: rgba(255, 255, 255, 0.3);
-        transform: translateY(-2px);
-        box-shadow: var(--shadow-lg);
+    .btn-back:hover {
+        background: rgba(255, 255, 255, 0.2);
         color: white;
-        text-decoration: none;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
     }
 
-    /* Modern Card Design */
-    .modern-card {
+    /* Cards */
+    .card {
         background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         border-radius: var(--radius-xl);
         box-shadow: var(--shadow-lg);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        margin-bottom: var(--space-6);
         overflow: hidden;
         transition: var(--transition-base);
-        margin-bottom: var(--space-6);
-        backdrop-filter: blur(20px);
     }
 
-    .modern-card:hover {
-        transform: translateY(-2px);
+    .card:hover {
+        transform: translateY(-4px);
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
 
-    .card-header-modern {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    .card-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+        color: white;
         padding: var(--space-6);
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        border: none;
+        position: relative;
+        overflow: hidden;
     }
 
-    .section-title {
+    .card-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, transparent 100%);
+        pointer-events: none;
+    }
+
+    .card-title {
         font-size: var(--font-size-xl);
         font-weight: var(--font-weight-bold);
-        color: var(--dark);
         margin: 0;
         display: flex;
         align-items: center;
         gap: var(--space-3);
+        position: relative;
+        z-index: 1;
     }
 
-    .section-icon {
-        width: 24px;
-        height: 24px;
-        color: var(--primary);
-    }
-
-    .card-body-modern {
+    .card-body {
         padding: var(--space-6);
     }
 
-    /* Info Rows */
-    .info-row {
+    /* Status Timeline */
+    .status-timeline {
+        position: relative;
+        padding-left: 2rem;
+    }
+
+    .status-timeline::before {
+        content: '';
+        position: absolute;
+        left: -0.25rem;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+    }
+
+    .timeline-item {
+        position: relative;
+        padding-bottom: var(--space-6);
+        margin-left: 1rem;
+    }
+
+    .timeline-item:last-child {
+        padding-bottom: 0;
+    }
+
+    .timeline-icon {
+        position: absolute;
+        left: -1.25rem;
+        top: 0.25rem;
+        width: 2rem;
+        height: 2rem;
+        background: var(--white);
+        border: 3px solid var(--primary);
+        border-radius: 50%;
         display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        padding: var(--space-3) 0;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        gap: var(--space-4);
+        align-items: center;
+        justify-content: center;
+        font-size: var(--font-size-sm);
+        color: var(--primary);
+        z-index: 2;
+        transition: var(--transition-bounce);
     }
 
-    .info-row:last-child {
-        border-bottom: none;
+    /* Desktop responsive adjustments */
+    @media (min-width: 1200px) {
+        .timeline-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            left: -1.375rem;
+            font-size: 1rem;
+        }
+        
+        .status-timeline {
+            padding-left: 2.5rem;
+        }
+        
+        .status-timeline::before {
+            left: -0.375rem;
+        }
+        
+        .timeline-item {
+            margin-left: 1.25rem;
+        }
     }
 
-    .info-label {
-        font-weight: var(--font-weight-medium);
+    @media (min-width: 992px) and (max-width: 1199px) {
+        .timeline-icon {
+            width: 2.25rem;
+            height: 2.25rem;
+            left: -1.25rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-timeline {
+            padding-left: 2.25rem;
+        }
+        
+        .status-timeline::before {
+            left: -0.25rem;
+        }
+        
+        .timeline-item {
+            margin-left: 1.125rem;
+        }
+    }
+
+    /* Tablet responsive adjustments */
+    @media (min-width: 769px) and (max-width: 991px) {
+        .timeline-icon {
+            width: 2rem;
+            height: 2rem;
+            left: -1.25rem;
+            font-size: 0.875rem;
+        }
+        
+        .status-timeline {
+            padding-left: 2rem;
+        }
+        
+        .status-timeline::before {
+            left: -0.25rem;
+        }
+        
+        .timeline-item {
+            margin-left: 1rem;
+        }
+    }
+
+    /* Mobile tablet responsive adjustments */
+    @media (max-width: 768px) {
+        .timeline-icon {
+            left: -1rem;
+            width: 1.5rem;
+            height: 1.5rem;
+            font-size: 0.75rem;
+            border-width: 2px;
+        }
+        
+        .status-timeline {
+            padding-left: 1.5rem;
+        }
+        
+        .status-timeline::before {
+            left: -0.125rem;
+        }
+        
+        .timeline-item {
+            margin-left: 0.75rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .timeline-icon {
+            left: -0.875rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            font-size: 0.625rem;
+            border-width: 2px;
+        }
+        
+        .status-timeline {
+            padding-left: 1.25rem;
+        }
+        
+        .status-timeline::before {
+            left: -0.0625rem;
+        }
+        
+        .timeline-item {
+            margin-left: 0.5rem;
+        }
+        
+        .timeline-content h4 {
+            font-size: 1rem;
+        }
+        
+        .timeline-content p {
+            font-size: 0.875rem;
+        }
+    }
+
+    .timeline-item.completed .timeline-icon {
+        background: var(--success);
+        border-color: var(--success);
+        color: white;
+        animation: pulse 2s infinite;
+    }
+
+    .timeline-item.current .timeline-icon {
+        background: var(--warning);
+        border-color: var(--warning);
+        color: white;
+        animation: bounce 1s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+
+    .timeline-content h4 {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--dark);
+        margin: 0 0 var(--space-2) 0;
+    }
+
+    .timeline-content {
+        margin-left: 1rem;
+        padding-left: var(--space-3);
+    }
+
+    .timeline-content p {
+        color: var(--gray);
+        margin: 0;
+        font-size: var(--font-size-sm);
+    }
+
+    .timeline-date {
         color: var(--gray);
         font-size: var(--font-size-sm);
-        min-width: 120px;
-        flex-shrink: 0;
-    }
-
-    .info-value {
-        color: var(--dark);
         font-weight: var(--font-weight-medium);
-        text-align: right;
-        flex: 1;
+        margin-top: var(--space-2);
     }
 
-    .info-value.highlight {
-        color: var(--primary);
-        font-weight: var(--font-weight-bold);
-        font-size: var(--font-size-lg);
+    /* Desktop responsive adjustments for content */
+    @media (min-width: 1200px) {
+        .timeline-content {
+            margin-left: 1.5rem;
+            padding-left: var(--space-4);
+        }
+    }
+
+    @media (min-width: 992px) and (max-width: 1199px) {
+        .timeline-content {
+            margin-left: 1.25rem;
+            padding-left: var(--space-3);
+        }
+    }
+
+    /* Tablet responsive adjustments for content */
+    @media (min-width: 769px) and (max-width: 991px) {
+        .timeline-content {
+            margin-left: 1rem;
+            padding-left: var(--space-3);
+        }
+    }
+
+    /* Mobile responsive adjustments for content */
+    @media (max-width: 768px) {
+        .timeline-content {
+            margin-left: 0.5rem;
+            padding-left: var(--space-2);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .timeline-content {
+            margin-left: 0.375rem;
+            padding-left: var(--space-2);
+        }
     }
 
     /* Status Badges */
@@ -208,1754 +430,1117 @@
         display: inline-flex;
         align-items: center;
         gap: var(--space-2);
-        padding: 0.375rem 0.75rem;
-        border-radius: 9999px;
+        padding: var(--space-2) var(--space-4);
+        border-radius: var(--radius);
         font-size: var(--font-size-sm);
-        font-weight: var(--font-weight-medium);
-        text-transform: capitalize;
+        font-weight: var(--font-weight-semibold);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    .status-badge.badge-approved,
-    .status-badge.badge-confirmed,
-    .status-badge.badge-completed {
+    .status-badge.pending {
+        background: rgba(251, 191, 36, 0.1);
+        color: #d97706;
+        border: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .status-badge.confirmed {
         background: rgba(16, 185, 129, 0.1);
-        color: #065f46;
+        color: #059669;
         border: 1px solid rgba(16, 185, 129, 0.2);
     }
 
-    .status-badge.badge-pending,
-    .status-badge.badge-payment-pending {
-        background: rgba(245, 158, 11, 0.1);
-        color: #92400e;
-        border: 1px solid rgba(245, 158, 11, 0.2);
-    }
-
-    .status-badge.badge-cancelled,
-    .status-badge.badge-rejected {
+    .status-badge.cancelled {
         background: rgba(239, 68, 68, 0.1);
-        color: #991b1b;
+        color: #dc2626;
         border: 1px solid rgba(239, 68, 68, 0.2);
     }
 
-    /* Alert Styles */
-    .alert {
-        padding: var(--space-4);
-        border-radius: var(--radius-lg);
-        margin-bottom: var(--space-6);
+    /* Quick Actions */
+    .quick-actions {
         display: flex;
-        align-items: center;
         gap: var(--space-3);
-        font-weight: var(--font-weight-medium);
+        flex-wrap: wrap;
+        margin-top: var(--space-6);
     }
 
-    .alert-success {
-        background: rgba(16, 185, 129, 0.1);
-        color: #065f46;
-        border: 1px solid rgba(16, 185, 129, 0.2);
-    }
-
-    .alert-danger {
-        background: rgba(239, 68, 68, 0.1);
-        color: #991b1b;
-        border: 1px solid rgba(239, 68, 68, 0.2);
-    }
-
-    /* Grid Layout */
-    .grid {
-        display: grid;
-        gap: var(--space-6);
-    }
-
-    .grid-cols-1 {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
-
-    .grid-cols-2 {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    @media (min-width: 768px) {
-        .md\\:grid-cols-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-    }
-
-    /* Button Styles */
-    .btn {
+    .btn-action {
+        padding: var(--space-3) var(--space-4);
+        border-radius: var(--radius);
+        border: none;
+        font-weight: var(--font-weight-semibold);
+        text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: var(--space-2);
-        padding: var(--space-3) var(--space-6);
-        border-radius: var(--radius-lg);
-        font-weight: var(--font-weight-semibold);
-        font-size: var(--font-size-sm);
-        text-decoration: none;
-        border: none;
+        transition: var(--transition-bounce);
         cursor: pointer;
-        transition: var(--transition-base);
+        font-size: var(--font-size-sm);
     }
 
     .btn-primary {
-        background: var(--primary);
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
         color: white;
+        box-shadow: var(--shadow);
     }
 
     .btn-primary:hover {
-        background: var(--primary-hover);
-        transform: translateY(-1px);
-        box-shadow: var(--shadow);
-    }
-
-    .btn-outline-danger {
-        background: transparent;
-        color: var(--danger);
-        border: 1px solid var(--danger);
-    }
-
-    .btn-outline-danger:hover {
-        background: var(--danger);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
         color: white;
-        transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+        background: var(--light-gray);
+        color: var(--gray);
+        border: 1px solid rgba(107, 114, 128, 0.2);
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray);
+        color: white;
+        transform: translateY(-2px);
+    }
+
+    .btn-danger {
+        background: linear-gradient(135deg, var(--danger) 0%, #dc2626 100%);
+        color: white;
         box-shadow: var(--shadow);
     }
 
-    /* Animation */
-    .animate-fade-in-up {
-        animation: fadeInUp 0.6s ease-out;
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        color: white;
     }
 
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    /* Payment Progress */
+    .payment-progress {
+        background: var(--light-gray);
+        border-radius: var(--radius);
+        padding: var(--space-4);
+        margin: var(--space-4) 0;
     }
 
-    /* Beautiful Modal Styles */
-    .modal-backdrop {
-        position: fixed;
+    .progress-bar {
+        background: var(--light-gray);
+        height: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+        margin: var(--space-3) 0;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--success) 0%, #10b981 100%);
+        border-radius: 4px;
+        transition: width 0.5s ease;
+        position: relative;
+    }
+
+    .progress-fill::after {
+        content: '';
+        position: absolute;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(4px);
+        background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.3) 50%, transparent 100%);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    .progress-text {
         display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-    }
-
-    .modal-backdrop:not(.hidden) {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .modal-wrapper {
-        width: 100%;
-        max-width: 480px;
-        margin: 20px;
-        transform: scale(0.9) translateY(20px);
-        transition: transform 0.3s ease;
-    }
-
-    .modal-backdrop:not(.hidden) .modal-wrapper {
-        transform: scale(1) translateY(0);
-    }
-
-    .beautiful-modal {
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .modal-close {
-        position: absolute;
-        top: 16px;
-        right: 16px;
-        width: 32px;
-        height: 32px;
-        border: none;
-        background: rgba(107, 114, 128, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        z-index: 10;
-    }
-
-    .modal-close:hover {
-        background: rgba(107, 114, 128, 0.2);
-        transform: scale(1.1);
-    }
-
-    .modal-close i {
-        font-size: 14px;
-        color: #6b7280;
-    }
-
-    .modal-content {
-        padding: 32px;
-        text-align: center;
-    }
-
-    .modal-icon-section {
-        margin-bottom: 24px;
-    }
-
-    .danger-icon {
-        width: 64px;
-        height: 64px;
-        background: #fee2e2;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto;
-    }
-
-    .danger-icon i {
-        font-size: 28px;
-        color: #dc2626;
-    }
-
-    .modal-text-section {
-        margin-bottom: 32px;
-    }
-
-    .modal-heading {
-        font-size: 20px;
-        font-weight: 600;
-        color: #111827;
-        margin: 0 0 12px 0;
-    }
-
-    .modal-description {
-        font-size: 14px;
-        color: #6b7280;
-        line-height: 1.5;
-        margin: 0;
-    }
-
-    .modal-form {
-        text-align: left;
-    }
-
-    .input-group {
-        margin-bottom: 24px;
-    }
-
-    .input-label {
-        display: block;
-        font-size: 14px;
-        font-weight: 500;
-        color: #374151;
-        margin-bottom: 8px;
-    }
-
-    .modern-textarea {
-        width: 100%;
-        padding: 12px 16px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        font-size: 14px;
-        line-height: 1.5;
-        resize: vertical;
-        transition: all 0.2s ease;
-        font-family: inherit;
-    }
-
-    .modern-textarea:focus {
-        outline: none;
-        border-color: #8b5cf6;
-        box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
-    }
-
-    .modern-textarea::placeholder {
-        color: #9ca3af;
-    }
-
-    .modal-buttons {
-        display: flex;
-        gap: 12px;
-        justify-content: flex-end;
-    }
-
-    .btn-cancel {
-        padding: 10px 20px;
-        border: 1px solid #d1d5db;
-        background: white;
-        color: #374151;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .btn-cancel:hover {
-        background: #f9fafb;
-        border-color: #9ca3af;
-    }
-
-    .btn-confirm {
-        padding: 10px 20px;
-        border: none;
-        background: #dc2626;
-        color: white;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .btn-confirm:hover {
-        background: #b91c1c;
-    }
-
-    .btn-confirm:active {
-        transform: translateY(1px);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-             /* Mobile-specific styles for better UX */
-             .quick-actions-grid {
-                 grid-template-columns: 1fr;
-                 gap: 12px;
-             }
-
-             .quick-action-item {
-                 padding: 12px;
-                 border-radius: 8px;
-             }
-
-             .action-icon-wrapper {
-                 width: 40px;
-                 height: 40px;
-                 font-size: 18px;
-                 margin-right: 10px;
-             }
-
-             .action-title {
-                 font-size: 13px;
-             }
-
-             .action-subtitle {
-                 font-size: 11px;
-             }
-
-             .quick-action-btn {
-                 width: 32px;
-                 height: 32px;
-                 font-size: 14px;
-             }
-
-             /* Progress timeline mobile adjustments */
-             .progress-timeline {
-                 padding: 16px;
-                 margin: 16px 0;
-             }
-
-             .timeline-step {
-                 padding: 12px 16px;
-                 margin-bottom: 8px;
-             }
-
-             .step-icon {
-                 width: 32px;
-                 height: 32px;
-                 font-size: 14px;
-             }
-
-             .step-title {
-                 font-size: 13px;
-             }
-
-             .step-description {
-                 font-size: 11px;
-             }
-
-             /* Payment status banner mobile */
-             .payment-status-banner {
-                 padding: 12px 16px;
-                 margin: 12px 0;
-                 border-radius: 8px;
-             }
-
-             .payment-banner-content h4 {
-                 font-size: 16px;
-             }
-
-             .payment-banner-content p {
-                 font-size: 13px;
-             }
-
-             /* Action cards mobile */
-             .action-card {
-                 padding: 16px;
-                 margin: 12px 0;
-                 border-radius: 8px;
-             }
-
-             .action-card h5 {
-                 font-size: 16px;
-             }
-
-             .action-card p {
-                 font-size: 13px;
-             }
-
-             /* Button adjustments for mobile */
-             .btn-primary-action {
-                 padding: 12px 20px;
-                 font-size: 14px;
-                 border-radius: 8px;
-             }
-
-             /* Touch-friendly spacing */
-             .row > div {
-                 margin-bottom: 16px;
-             }
-
-             /* Improved text readability on mobile */
-             .card-body {
-                 padding: 16px;
-             }
-
-             .card-body h6 {
-                 font-size: 14px;
-                 margin-bottom: 8px;
-             }
-
-             .card-body p, .card-body span {
-                 font-size: 13px;
-                 line-height: 1.5;
-             }
-
-             /* Modal improvements for mobile */
-             .modal-dialog {
-                 margin: 10px;
-                 max-width: calc(100% - 20px);
-             }
-
-             .modal-content {
-                 border-radius: 12px;
-             }
-
-             .modal-header {
-                 padding: 16px;
-             }
-
-             .modal-body {
-                 padding: 16px;
-             }
-
-             .modal-footer {
-                 padding: 16px;
-                 flex-direction: column;
-                 gap: 8px;
-             }
-
-             .modal-footer .btn {
-                  width: 100%;
-                  margin: 0;
-              }
-         }
-
-         .container {
-            padding: 1rem;
-        }
-        
-        .page-title {
-            font-size: 1.5rem;
-        }
-        
-        .grid-cols-2 {
-            grid-template-columns: 1fr;
-        }
-        
-        .info-row {
-            flex-direction: column;
-            gap: var(--space-2);
-        }
-        
-        .info-value {
-            text-align: left;
-        }
-    }
-
-    /* Progress Timeline Styles */
-    .progress-timeline {
-        background: rgba(255, 255, 255, 0.95);
-        border-radius: var(--radius-xl);
-        padding: var(--space-6);
-        margin-bottom: var(--space-6);
-        box-shadow: var(--shadow-lg);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .timeline-header {
-        text-align: center;
-        margin-bottom: var(--space-6);
-    }
-
-    .timeline-title {
-        font-size: var(--font-size-xl);
-        font-weight: var(--font-weight-bold);
-        color: var(--dark);
-        margin: 0 0 var(--space-2) 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: var(--space-3);
-    }
-
-    .timeline-subtitle {
-        color: var(--gray);
-        font-size: var(--font-size-sm);
-        margin: 0;
-    }
-
-    .timeline-container {
-        display: flex;
-        align-items: center;
         justify-content: space-between;
-        position: relative;
-        margin: 0 2rem;
-    }
-
-    .timeline-line {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: #e5e7eb;
-        border-radius: 2px;
-        z-index: 1;
-    }
-
-    .timeline-progress {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background: linear-gradient(90deg, var(--primary) 0%, var(--primary-hover) 100%);
-        border-radius: 2px;
-        transition: width 0.8s ease;
-        z-index: 2;
-    }
-
-    .timeline-step {
-        display: flex;
-        flex-direction: column;
         align-items: center;
-        position: relative;
-        z-index: 3;
-        background: white;
-        padding: 0 1rem;
-    }
-
-    .step-circle {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 18px;
-        font-weight: var(--font-weight-bold);
-        margin-bottom: var(--space-3);
-        transition: all 0.3s ease;
-        border: 3px solid #e5e7eb;
-        background: white;
-        color: var(--gray);
-    }
-
-    .step-circle.active {
-        background: var(--primary);
-        border-color: var(--primary);
-        color: white;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
-        transform: scale(1.1);
-    }
-
-    .step-circle.completed {
-        background: var(--success);
-        border-color: var(--success);
-        color: white;
-    }
-
-    .step-label {
         font-size: var(--font-size-sm);
         font-weight: var(--font-weight-medium);
         color: var(--gray);
-        text-align: center;
-        min-width: 80px;
     }
 
-    .step-label.active {
-        color: var(--primary);
-        font-weight: var(--font-weight-bold);
+    /* Info Grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: var(--space-4);
+        margin: var(--space-4) 0;
     }
 
-    .step-label.completed {
-        color: var(--success);
+    .info-item {
+        background: rgba(255, 255, 255, 0.5);
+        padding: var(--space-4);
+        border-radius: var(--radius);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: var(--transition-base);
+    }
+
+    .info-item:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateY(-2px);
+    }
+
+    .info-label {
+        font-size: var(--font-size-sm);
         font-weight: var(--font-weight-semibold);
+        color: var(--gray);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: var(--space-2);
     }
 
-    /* Payment Status Banner Styles */
-    .payment-status-banner {
+    .info-value {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--dark);
         display: flex;
         align-items: center;
-        padding: 20px;
-        border-radius: 12px;
-        margin-bottom: 24px;
-        border: 2px solid;
-        background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7));
-        backdrop-filter: blur(10px);
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        gap: var(--space-2);
     }
 
-    .payment-required {
-        border-color: #ffc107;
-        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    /* Map Container */
+    .map-container {
+        height: 300px;
+        border-radius: var(--radius);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        background: var(--light-gray);
     }
 
-    .payment-verified {
-        border-color: #28a745;
-        background: linear-gradient(135deg, #d4edda, #a8e6cf);
-    }
-
-    .payment-pending {
-        border-color: #17a2b8;
-        background: linear-gradient(135deg, #d1ecf1, #a8d8ea);
-    }
-
-    .payment-rejected {
-        border-color: #dc3545;
-        background: linear-gradient(135deg, #f8d7da, #f5c6cb);
-    }
-
-    .payment-not-required {
-        border-color: #6c757d;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    }
-
-    .status-icon {
-        font-size: 32px;
-        margin-right: 16px;
-        flex-shrink: 0;
-    }
-
-    .payment-required .status-icon { color: #856404; }
-    .payment-verified .status-icon { color: #155724; }
-    .payment-pending .status-icon { color: #0c5460; }
-    .payment-rejected .status-icon { color: #721c24; }
-    .payment-not-required .status-icon { color: #495057; }
-
-    .status-content {
-        flex: 1;
-    }
-
-    .status-title {
-        font-size: 18px;
-        font-weight: 700;
-        margin: 0 0 4px 0;
-        color: #2c3e50;
-    }
-
-    .status-message {
-        font-size: 14px;
-        margin: 0;
-        opacity: 0.8;
-        color: #495057;
-    }
-
-    .status-action {
-        margin-left: 16px;
-    }
-
-    .btn-payment-action {
-        background: linear-gradient(135deg, #ffc107, #ffb300);
-        color: #856404;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-    }
-
-    .btn-payment-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
-        color: #856404;
-        text-decoration: none;
-    }
-
-    .btn-receipt-action {
-        background: linear-gradient(135deg, #28a745, #20c997);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 8px;
-        font-weight: 600;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-    }
-
-    .btn-receipt-action:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
-        color: white;
-        text-decoration: none;
-    }
-
-    /* Payment Details Styles */
-    .payment-details {
-        background: rgba(255, 255, 255, 0.7);
-        border-radius: 12px;
-        padding: 20px;
-        border: 1px solid rgba(0, 0, 0, 0.1);
-    }
-
-    .payment-highlight {
-        background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-        margin: 12px -8px;
-        padding: 12px 16px;
-        border-radius: 8px;
-        border-left: 4px solid #2196f3;
-    }
-
-    .payment-highlight .info-value.highlight {
-        font-size: 18px;
-        font-weight: 700;
-        color: #1976d2;
-    }
-
-    .payment-transaction-details {
-        margin-top: 16px;
-        padding-top: 16px;
-        border-top: 2px dashed rgba(0, 0, 0, 0.1);
-    }
-
-    /* Enhanced Action Card Styles */
-    .action-card-content {
+    .map-placeholder {
         display: flex;
         align-items: center;
-        gap: 20px;
-        padding: 24px;
-        background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-        border-radius: 16px;
-        border: 2px solid #dee2e6;
+        justify-content: center;
+        height: 100%;
+        color: var(--gray);
+        font-size: var(--font-size-lg);
+        background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
     }
 
-    .action-icon {
-        font-size: 48px;
-        color: #007bff;
-        flex-shrink: 0;
-    }
-
-    .action-text {
-        flex: 1;
-    }
-
-    .action-title {
-        font-size: 20px;
-        font-weight: 700;
-        margin: 0 0 8px 0;
-        color: #2c3e50;
-    }
-
-    .action-description {
-        font-size: 14px;
-        color: #6c757d;
-        margin: 0 0 12px 0;
-        line-height: 1.5;
-    }
-
-    .payment-methods {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .payment-method-tag {
-        background: #007bff;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
-    }
-
-    .action-buttons {
-        flex-shrink: 0;
-    }
-
-    .btn-primary-action {
-        background: linear-gradient(135deg, #007bff, #0056b3);
-        color: white;
-        border: none;
-        padding: 16px 32px;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 16px;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
-    }
-
-    .btn-primary-action:hover {
-             transform: translateY(-3px);
-             box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
-             color: white;
-             text-decoration: none;
-         }
-
-         /* Quick Actions Grid Styles */
-         .quick-actions-grid {
-             display: grid;
-             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-             gap: 16px;
-             margin-top: 8px;
-         }
-
-         .quick-action-item {
-             display: flex;
-             align-items: center;
-             padding: 16px;
-             background: linear-gradient(135deg, #ffffff, #f8f9fa);
-             border: 2px solid #e9ecef;
-             border-radius: 12px;
-             transition: all 0.3s ease;
-             position: relative;
-             overflow: hidden;
-         }
-
-         .quick-action-item:hover {
-             transform: translateY(-2px);
-             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-             border-color: #007bff;
-         }
-
-         .action-icon-wrapper {
-             width: 48px;
-             height: 48px;
-             border-radius: 12px;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             font-size: 20px;
-             margin-right: 12px;
-             flex-shrink: 0;
-         }
-
-         .action-icon-wrapper.support {
-             background: linear-gradient(135deg, #17a2b8, #138496);
-             color: white;
-         }
-
-         .action-icon-wrapper.receipt {
-             background: linear-gradient(135deg, #28a745, #1e7e34);
-             color: white;
-         }
-
-         .action-icon-wrapper.reschedule {
-             background: linear-gradient(135deg, #ffc107, #e0a800);
-             color: #856404;
-         }
-
-         .action-icon-wrapper.share {
-             background: linear-gradient(135deg, #6f42c1, #5a32a3);
-             color: white;
-         }
-
-         .action-icon-wrapper.emergency {
-             background: linear-gradient(135deg, #dc3545, #c82333);
-             color: white;
-         }
-
-         .action-icon-wrapper.weather {
-             background: linear-gradient(135deg, #fd7e14, #e55a00);
-             color: white;
-         }
-
-         .action-content {
-             flex: 1;
-         }
-
-         .action-title {
-             font-size: 14px;
-             font-weight: 600;
-             margin: 0 0 2px 0;
-             color: #2c3e50;
-         }
-
-         .action-subtitle {
-             font-size: 12px;
-             color: #6c757d;
-             margin: 0;
-         }
-
-         .quick-action-btn {
-             width: 36px;
-             height: 36px;
-             border-radius: 8px;
-             background: #f8f9fa;
-             border: 2px solid #dee2e6;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             color: #495057;
-             text-decoration: none;
-             transition: all 0.3s ease;
-             flex-shrink: 0;
-         }
-
-         .quick-action-btn:hover {
-             background: #007bff;
-             border-color: #007bff;
-             color: white;
-             transform: scale(1.1);
-             text-decoration: none;
-         }
-
+    /* Responsive Design */
     @media (max-width: 768px) {
-        .timeline-container {
-            padding: 0 1rem;
-        }
-        
-        .modern-card {
-            margin: 0 0.5rem 1rem 0.5rem;
-        }
-        
-        .card-body-modern {
+        .container {
             padding: 1rem;
         }
 
-        .section-title {
-            font-size: 1.1rem;
-            padding: 0 0.5rem;
-        }
-        
-        .action-card-content {
-            flex-direction: column;
-            text-align: center;
-            gap: 16px;
-        }
-        
-        .payment-status-banner {
-            flex-direction: column;
-            text-align: center;
-            gap: 12px;
-        }
-        
-        .status-action {
-            margin-left: 0;
+        .card-header,
+        .card-body {
+            padding: var(--space-4);
         }
 
-        .quick-actions-grid {
+        .page-title {
+            font-size: 1.5rem;
+        }
+
+        .info-grid {
             grid-template-columns: 1fr;
-            gap: 12px;
         }
 
-        .quick-action-item {
-            padding: 12px;
+        .quick-actions {
+            flex-direction: column;
         }
 
-        .action-icon-wrapper {
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
+        .btn-action {
+            justify-content: center;
+        }
+
+        .header-actions {
+            margin-top: var(--space-4);
+        }
+
+        .timeline-item {
+            margin-left: 0.5rem;
+        }
+
+        .timeline-icon {
+            left: -1.75rem;
         }
     }
 
-    /* Tooltip Styles */
-    .tooltip-wrapper {
-        position: relative;
-        display: inline-block;
+    /* Notification System Styles */
+    .notification-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 1050; /* Lower than Bootstrap modal z-index (1055) */
+        max-width: 400px;
+        width: 100%;
+        pointer-events: none; /* Allow clicks to pass through container */
     }
 
-    .tooltip-icon {
-        width: 16px;
-        height: 16px;
-        background: #6c757d;
-        color: white;
-        border-radius: 50%;
-        display: inline-flex;
+    .notification {
+        background: white;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-lg);
+        margin-bottom: var(--space-3);
+        overflow: hidden;
+        pointer-events: auto; /* Re-enable clicks on actual notifications */
+        transform: translateX(100%);
+        transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 4px solid var(--primary);
+    }
+
+    .notification.show {
+        transform: translateX(0);
+    }
+
+    .notification.success {
+        border-left-color: var(--success);
+    }
+
+    .notification.error {
+        border-left-color: var(--danger);
+    }
+
+    .notification.warning {
+        border-left-color: var(--warning);
+    }
+
+    .notification.info {
+        border-left-color: var(--primary);
+    }
+
+    .notification-content {
+        padding: var(--space-4);
+        display: flex;
+        align-items: flex-start;
+        gap: var(--space-3);
+    }
+
+    .notification-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 10px;
-        font-weight: bold;
-        cursor: help;
-        margin-left: 4px;
-        transition: all 0.3s ease;
-    }
-
-    .tooltip-icon:hover {
-        background: #007bff;
-        transform: scale(1.1);
-    }
-
-    .tooltip-content {
-        position: absolute;
-        bottom: 125%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: #2c3e50;
+        border-radius: 50%;
+        font-size: 12px;
         color: white;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        white-space: nowrap;
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        z-index: 1000;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
-    .tooltip-content::after {
-        content: '';
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        border: 5px solid transparent;
-        border-top-color: #2c3e50;
+    .notification.success .notification-icon {
+        background: var(--success);
     }
 
-    .tooltip-wrapper:hover .tooltip-content {
-        opacity: 1;
-        visibility: visible;
+    .notification.error .notification-icon {
+        background: var(--danger);
     }
 
-    /* Help text styles */
-    .help-text {
-        font-size: 12px;
-        color: #6c757d;
-        margin-top: 4px;
-        font-style: italic;
+    .notification.warning .notification-icon {
+        background: var(--warning);
     }
 
-    .help-text.error {
-        color: #dc3545;
-        font-weight: 500;
+    .notification.info .notification-icon {
+        background: var(--primary);
     }
 
-    .help-text.success {
-        color: #28a745;
-        font-weight: 500;
+    .notification-message {
+        flex: 1;
+        font-size: var(--font-size-sm);
+        color: var(--dark);
+        line-height: 1.5;
     }
 
-    .help-text.warning {
-        color: #ffc107;
-        font-weight: 500;
+    .notification-close {
+        background: none;
+        border: none;
+        color: var(--gray);
+        cursor: pointer;
+        padding: 0;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: var(--transition-base);
+        flex-shrink: 0;
     }
 
-    /* Status explanation styles */
-    .status-explanation {
-        background: #f8f9fa;
-        border-left: 4px solid #007bff;
-        padding: 12px 16px;
-        margin: 8px 0;
-        border-radius: 0 8px 8px 0;
-        font-size: 13px;
-        color: #495057;
+    .notification-close:hover {
+        background: var(--light-gray);
+        color: var(--dark);
     }
 
-    .status-explanation.pending {
-        border-left-color: #ffc107;
-        background: #fff9e6;
+    /* Animations */
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
     }
 
-    .status-explanation.approved {
-        border-left-color: #17a2b8;
-        background: #e6f7ff;
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
     }
 
-    .status-explanation.confirmed {
-        border-left-color: #28a745;
-        background: #e8f5e8;
+    .notification.slide-in {
+        animation: slideInRight 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    .status-explanation.cancelled {
-        border-left-color: #dc3545;
-        background: #ffeaea;
+    .notification.slide-out {
+        animation: slideOutRight 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
 
-    .status-explanation.completed {
-        border-left-color: #6f42c1;
-        background: #f3e8ff;
+    /* Mobile Responsive Notifications */
+    @media (max-width: 768px) {
+        .notification-container {
+            top: 10px;
+            right: 10px;
+            left: 10px;
+            max-width: none;
+        }
+
+        .notification-content {
+            padding: var(--space-3);
+        }
+
+        .notification-message {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Staff Information Cards */
+    .staff-info-card {
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4);
+        transition: var(--transition-base);
+        height: 100%;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .staff-info-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+        border-color: var(--primary);
+    }
+
+    .staff-header {
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+        margin-bottom: var(--space-4);
+        padding-bottom: var(--space-3);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .staff-icon {
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .staff-icon.guide {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+    }
+
+    .staff-icon.porter {
+        background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+    }
+
+    .staff-details {
+        flex: 1;
+    }
+
+    .staff-name {
+        font-size: var(--font-size-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--dark);
+        margin: 0 0 var(--space-2) 0;
+    }
+
+    .staff-role {
+        color: var(--gray);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-medium);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .staff-contact {
+        margin-bottom: var(--space-4);
+    }
+
+    .contact-item {
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin-bottom: var(--space-2);
+        color: var(--gray);
+        font-size: var(--font-size-sm);
+    }
+
+    .contact-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .contact-item i {
+        width: 1rem;
+        text-align: center;
+        color: var(--primary);
+    }
+
+    .staff-description {
+        background: rgba(37, 99, 235, 0.05);
+        border-radius: var(--radius);
+        padding: var(--space-3);
+        border-left: 3px solid var(--primary);
+    }
+
+    .staff-description p {
+        margin: 0;
+        font-size: var(--font-size-sm);
+        color: var(--dark);
+        line-height: 1.5;
+    }
+
+    /* Mobile responsive for staff cards */
+    @media (max-width: 768px) {
+        .staff-info-card {
+            margin-bottom: var(--space-4);
+        }
+
+        .staff-header {
+            flex-direction: column;
+            text-align: center;
+            gap: var(--space-2);
+        }
+
+        .staff-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            font-size: 1rem;
+        }
+
+        .staff-name {
+            font-size: var(--font-size-base);
+        }
+
+        .contact-item {
+            justify-content: center;
+        }
     }
 </style>
-@endpush
 
-<x-app-layout>
-    <div class="booking-details-container">
-        <div class="container">
-            <!-- Page Header -->
-            <div class="page-header animate-fade-in-up">
-                <h1 class="page-title">
-                    <i class="bi bi-calendar-check"></i>
-                    Booking Details
-                </h1>
-                <p class="page-subtitle">View and manage your hiking booking information</p>
-                <div class="header-actions">
-                    <a href="{{ route('user.bookings.index') }}" class="header-btn">
-                        <i class="bi bi-arrow-left"></i>
-                        Back to My Bookings
-                    </a>
-                </div>
-            </div>
+<div class="booking-details-container">
+    <!-- Notification Container for Real-time Updates -->
+    <div id="notification-container" class="notification-container"></div>
 
-            <!-- Alert Messages -->
-            @if(session('success'))
-                <div class="alert alert-success animate-fade-in-up">
-                    <i class="bi bi-check-circle"></i>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('error'))
-                <div class="alert alert-danger animate-fade-in-up">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    {{ session('error') }}
-                </div>
-            @endif
-
-            @if($errors->any())
-                <div class="alert alert-danger animate-fade-in-up">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <div>
-                        @foreach($errors->all() as $error)
-                            <div>{{ $error }}</div>
-                        @endforeach
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <!-- Page Header -->
+                <div class="page-header">
+                    <h1 class="page-title">
+                        <i class="bi bi-calendar-check"></i>
+                        Booking Details
+                    </h1>
+                    <p class="page-subtitle">View and manage your hiking booking information</p>
+                    <div class="header-actions">
+                        <a href="{{ route('user.bookings.index') }}" class="btn-back">
+                            <i class="bi bi-arrow-left"></i>
+                            Back to My Bookings
+                        </a>
                     </div>
                 </div>
-            @endif
 
-            <div class="grid grid-cols-1 md:grid-cols-2">
-                <!-- Hike Information -->
-                <div class="modern-card animate-fade-in-up">
-                    <div class="card-header-modern">
-                        <h2 class="section-title">
-                            <i class="bi bi-mountain section-icon"></i>
-                            Hike Information
+                <!-- Booking Progress Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-graph-up"></i>
+                            Booking Progress
                         </h2>
                     </div>
-                    <div class="card-body-modern">
-                        @if($booking->hike)
-                            <div class="info-row">
-                                <span class="info-label">Trail</span>
-                                <span class="info-value">{{ $booking->hike->trail }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Date</span>
-                                <span class="info-value">{{ $booking->hike->date->format('M d, Y') }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Start Time</span>
-                                <span class="info-value">{{ $booking->hike->start_time->format('h:i A') }}</span>
-                            </div>
-                            <div class="info-row">
-                                <span class="info-label">Length of Stay</span>
-                                <span class="info-value">{{ ucfirst(str_replace('_', ' ', $booking->length_of_stay)) }}</span>
-                            </div>
-                            @if($booking->hike->notes)
-                                <div class="info-row">
-                                    <span class="info-label">Notes</span>
-                                    <span class="info-value">{{ $booking->hike->notes }}</span>
+                    <div class="card-body">
+                        <p class="mb-4">Track your booking journey. Current status: 
+                            <span class="status-badge {{ $booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')) ? 'payment_pending' : strtolower($booking->status) }}">
+                                <i class="bi bi-{{ $booking->status === 'pending' ? 'clock' : (($booking->status === 'confirmed' && $booking->payment && $booking->payment->status === 'verified') ? 'check-circle' : ($booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')) ? 'credit-card' : 'x-circle')) }}"></i>
+                                @if($booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')))
+                                    Payment Pending
+                                @elseif($booking->status === 'confirmed' && $booking->payment && $booking->payment->status === 'verified')
+                                    Confirmed
+                                @else
+                                    {{ ucfirst($booking->status) }}
+                                @endif
+                            </span>
+                        </p>
+                        
+                        <!-- Interactive Status Timeline -->
+                        <div class="status-timeline">
+                            <div class="timeline-item completed">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-check"></i>
                                 </div>
+                                <div class="timeline-content">
+                                    <h4>Booking Submitted</h4>
+                                    <p>Your booking request has been received</p>
+                                    <div class="timeline-date">{{ $booking->created_at->format('M d, Y H:i') }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item {{ $booking->status !== 'pending' ? 'completed' : 'current' }}">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-{{ $booking->status !== 'pending' ? 'check' : 'hourglass-split' }}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>Admin Approval</h4>
+                                    <p>{{ $booking->status === 'pending' ? 'Under Review' : 'Approved by Admin' }}</p>
+                                    @if($booking->status !== 'pending')
+                                        <div class="timeline-date">{{ $booking->updated_at->format('M d, Y H:i') }}</div>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item {{ $booking->payment && $booking->payment->status === 'verified' ? 'completed' : ($booking->status === 'payment_pending' || $booking->status === 'confirmed' ? 'current' : '') }}">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-{{ $booking->payment && $booking->payment->status === 'verified' ? 'check' : 'credit-card' }}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>Payment {{ $booking->payment && $booking->payment->status === 'verified' ? 'Verified' : 'Pending' }}</h4>
+                                    <p>{{ $booking->payment && $booking->payment->status === 'verified' ? 'Payment confirmed and verified' : 'Awaiting payment verification' }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="timeline-item {{ $booking->trek_date <= now() ? 'completed' : '' }}">
+                                <div class="timeline-icon">
+                                    <i class="bi bi-{{ $booking->trek_date <= now() ? 'check' : 'calendar-event' }}"></i>
+                                </div>
+                                <div class="timeline-content">
+                                    <h4>Trek Day</h4>
+                                    <p>{{ $booking->trek_date <= now() ? 'Trek completed' : 'Scheduled' }}</p>
+                                    <div class="timeline-date">{{ \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="quick-actions">
+                            @if($booking->status === 'pending')
+                                <button class="btn-action btn-secondary" onclick="showBookingNotification('You can contact support for booking updates', 'info')">
+                                    <i class="bi bi-headset"></i>
+                                    Contact Support
+                                </button>
                             @endif
-                        @else
-                            <div class="info-row">
-                                <span class="info-label">Trail</span>
-                                <span class="info-value">{{ $booking->trail ?? 'Not specified' }}</span>
+                            
+                            @if($booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')))
+                                <a href="{{ route('user.bookings.payment', $booking) }}" class="btn-action btn-primary">
+                                    <i class="bi bi-credit-card"></i>
+                                    Upload Payment
+                                </a>
+                            @endif
+                            
+                            @if($booking->status === 'pending' || ($booking->status === 'confirmed' && $booking->trek_date > now()->addDays(2)))
+                                <button class="btn-action btn-danger" data-bs-toggle="modal" data-bs-target="#cancelBookingModal">
+                                    <i class="bi bi-x-circle"></i>
+                                    Cancel Booking
+                                </button>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trek Information Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-mountain"></i>
+                            Trek Information
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Trail</div>
+                                <div class="info-value">
+                                    <i class="bi bi-geo-alt"></i>
+                                    {{ $booking->trail }}
+                                </div>
                             </div>
-                            <div class="info-row">
-                                <span class="info-label">Date</span>
-                                <span class="info-value">{{ $booking->trek_date ? $booking->trek_date->format('M d, Y') : 'Not specified' }}</span>
+                            <div class="info-item">
+                                <div class="info-label">Date</div>
+                                <div class="info-value">
+                                    <i class="bi bi-calendar"></i>
+                                    {{ \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') }}
+                                </div>
                             </div>
-                            <div class="info-row">
-                                <span class="info-label">Start Time</span>
-                                <span class="info-value">{{ $booking->start_time ? $booking->start_time->format('h:i A') : 'Not specified' }}</span>
+                            <div class="info-item">
+                                <div class="info-label">Start Time</div>
+                                <div class="info-value">
+                                    <i class="bi bi-clock"></i>
+                                    {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}
+                                </div>
                             </div>
-                            <div class="info-row">
-                                <span class="info-label">Length of Stay</span>
-                                <span class="info-value">{{ ucfirst(str_replace('_', ' ', $booking->length_of_stay)) }}</span>
+                            <div class="info-item">
+                                <div class="info-label">Duration</div>
+                                <div class="info-value">
+                                    <i class="bi bi-hourglass-split"></i>
+                                    Day hike
+                                </div>
                             </div>
-                            <div class="alert alert-warning mt-3">
-                                <i class="bi bi-exclamation-triangle me-2"></i>
-                                This booking is not associated with a specific hike. It may be a custom booking.
+                        </div>
+
+                        <!-- Interactive Map -->
+                        <div class="mt-4">
+                            <h5 class="mb-3">
+                                <i class="bi bi-map"></i>
+                                Trail Location
+                            </h5>
+                            <div class="map-container">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15941.077892918198!2d122.11084146356167!3d18.214755317831326!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33867132d482c7c7%3A0x793f607f01545202!2sMt.%20Cagua%20Crater!5e1!3m2!1sen!2sph!4v1761578200448!5m2!1sen!2sph" 
+                                        width="600" 
+                                        height="450" 
+                                        style="border:0; width: 100%; border-radius: 0.5rem;" 
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                </iframe>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Staff Assignment Card -->
+                @if($booking->guide || $booking->porter)
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-people"></i>
+                            Your Trek Team
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-4 text-muted">Meet your assigned trek team members who will guide and assist you during your adventure.</p>
+                        
+                        <div class="row">
+                            @if($booking->guide)
+                            <div class="col-md-6 mb-4">
+                                <div class="staff-info-card">
+                                    <div class="staff-header">
+                                        <div class="staff-icon guide">
+                                            <i class="bi bi-compass"></i>
+                                        </div>
+                                        <div class="staff-details">
+                                            <h4 class="staff-name">{{ $booking->guide->name }}</h4>
+                                            <p class="staff-role">Your Trek Guide</p>
+                                        </div>
+                                    </div>
+                                    <div class="staff-contact">
+                                        <div class="contact-item">
+                                            <i class="bi bi-telephone"></i>
+                                            <span>{{ $booking->guide->contact_number }}</span>
+                                        </div>
+                                        @if($booking->guide->email)
+                                        <div class="contact-item">
+                                            <i class="bi bi-envelope"></i>
+                                            <span>{{ $booking->guide->email }}</span>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="staff-description">
+                                        <p><strong>Experience:</strong> Professional trek guide with extensive knowledge of Mt. Cagua trails and safety protocols.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
+                            @if($booking->porter)
+                            <div class="col-md-6 mb-4">
+                                <div class="staff-info-card">
+                                    <div class="staff-header">
+                                        <div class="staff-icon porter">
+                                            <i class="bi bi-backpack"></i>
+                                        </div>
+                                        <div class="staff-details">
+                                            <h4 class="staff-name">{{ $booking->porter->name }}</h4>
+                                            <p class="staff-role">Your Porter</p>
+                                        </div>
+                                    </div>
+                                    <div class="staff-contact">
+                                        <div class="contact-item">
+                                            <i class="bi bi-telephone"></i>
+                                            <span>{{ $booking->porter->contact_number }}</span>
+                                        </div>
+                                        @if($booking->porter->email)
+                                        <div class="contact-item">
+                                            <i class="bi bi-envelope"></i>
+                                            <span>{{ $booking->porter->email }}</span>
+                                        </div>
+                                        @endif
+                                    </div>
+                                    <div class="staff-description">
+                                        <p><strong>Role:</strong> Assists with equipment, supplies, and provides additional support during your trek.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+
+                        @if(!$booking->guide && !$booking->porter)
+                        <div class="text-center py-4">
+                            <div class="mb-3">
+                                <i class="bi bi-clock-history display-4 text-muted"></i>
+                            </div>
+                            <h5 class="text-muted">Staff Assignment Pending</h5>
+                            <p class="text-muted mb-0">Your guide and porter will be assigned closer to your trek date. You'll be notified once they're assigned.</p>
+                        </div>
                         @endif
                     </div>
                 </div>
+                @endif
 
-                <!-- Booking Status -->
-                <div class="modern-card animate-fade-in-up">
-                    <div class="card-header-modern">
-                        <h2 class="section-title">
-                            <i class="bi bi-check-circle section-icon"></i>
+                <!-- Booking Status Card -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-info-circle"></i>
                             Booking Status
                         </h2>
                     </div>
-                    <div class="card-body-modern">
-                        <div class="info-row">
-                            <span class="info-label">
-                                Status
-                                <div class="tooltip-wrapper">
-                                    <div class="tooltip-icon">?</div>
-                                    <div class="tooltip-content">
-                                        @if($booking->status === 'pending')
-                                            Your booking is awaiting admin approval
-                                        @elseif($booking->status === 'payment_pending')
-                                            Payment required to confirm your booking
-                                        @elseif($booking->status === 'confirmed')
-                                            Your booking is confirmed and ready
-                                        @elseif($booking->status === 'completed')
-                                            Your hike has been completed
-                                        @elseif($booking->status === 'cancelled')
-                                            This booking has been cancelled
-                                        @else
-                                            Current status of your booking
-                                        @endif
-                                    </div>
-                                </div>
-                            </span>
-                            <span class="status-badge badge-{{ $booking->status }}">
-                                {{ ucfirst(str_replace('_', ' ', $booking->status)) }}
-                            </span>
-                        </div>
-                        
-                        <!-- Status Explanation -->
-                        <div class="status-explanation {{ $booking->status }}">
-                            @if($booking->status === 'pending')
-                                @if($booking->hike_id === null)
-                                    <strong>Custom Booking Under Review:</strong> Your custom booking request is being reviewed by our admin team. You'll receive an email notification once it's approved and payment becomes available.
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-label">Status</div>
+                                <div class="info-value">
+                                    <span class="status-badge {{ $booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')) ? 'payment_pending' : strtolower($booking->status) }}">
+                                <i class="bi bi-{{ $booking->status === 'pending' ? 'clock' : (($booking->status === 'confirmed' && $booking->payment && $booking->payment->status === 'verified') ? 'check-circle' : ($booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')) ? 'credit-card' : 'x-circle')) }}"></i>
+                                @if($booking->status === 'payment_pending' || ($booking->status === 'confirmed' && (!$booking->payment || $booking->payment->status !== 'verified')))
+                                    Payment Pending
+                                @elseif($booking->status === 'confirmed' && $booking->payment && $booking->payment->status === 'verified')
+                                    Confirmed
                                 @else
-                                    <strong>What's next?</strong> Your booking is under review. You'll receive an email notification once it's approved or if additional information is needed.
-                                @endif
-                            @elseif($booking->status === 'payment_pending')
-                                <strong>Action Required:</strong> Complete your payment to secure your booking. Payment must be made within 24 hours to avoid cancellation.
-                            @elseif($booking->status === 'confirmed')
-                                <strong>You're all set!</strong> Your booking is confirmed. Check your email for detailed instructions and what to bring on your hike.
-                            @elseif($booking->status === 'completed')
-                                <strong>Thank you!</strong> We hope you enjoyed your hiking experience. Don't forget to leave a review to help other hikers.
-                            @elseif($booking->status === 'cancelled')
-                                <strong>Booking Cancelled:</strong> This booking has been cancelled. If you have questions about refunds, please contact support.
-                            @elseif($booking->status === 'rejected')
-                                <strong>Booking Not Approved:</strong> Unfortunately, your booking request could not be approved. Please contact support for more information.
-                            @endif
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Booking ID</span>
-                            <span class="info-value">#{{ $booking->id }}</span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">Tourists</span>
-                            <span class="info-value">
-                                @if($booking->foreign_tourists > 0)
-                                    {{ $booking->foreign_tourists }} Foreign
-                                    @if($booking->local_tourists > 0), @endif
-                                @endif
-                                @if($booking->local_tourists > 0)
-                                    {{ $booking->local_tourists }} Local
+                                    {{ ucfirst($booking->status) }}
                                 @endif
                             </span>
-                        </div>
-                        <div class="info-row">
-                            <span class="info-label">
-                                Total Amount
-                                <div class="tooltip-wrapper">
-                                    <div class="tooltip-icon">?</div>
-                                    <div class="tooltip-content">
-                                        Includes all fees: guide, porter, permits, and taxes
-                                    </div>
-                                </div>
-                            </span>
-                            <span class="info-value highlight">₱{{ number_format($booking->total_amount, 2) }}</span>
-                        </div>
-                        <div class="help-text">
-                            @if($booking->status === 'payment_pending')
-                                <span class="warning">⚠️ Payment deadline: {{ $booking->created_at->addHours(24)->format('M d, Y h:i A') }}</span>
-                            @elseif($booking->payment && $booking->payment->status === 'verified')
-                                <span class="success">✅ Payment confirmed on {{ $booking->payment->verified_at->format('M d, Y') }}</span>
-                            @endif
-                        </div>
-                        @if($booking->approved_at)
-                            <div class="info-row">
-                                <span class="info-label">Approved At</span>
-                                <span class="info-value">{{ $booking->approved_at->format('M d, Y h:i A') }}</span>
-                            </div>
-                        @endif
-                    </div>
-                </div>
-
-                <!-- Payment Information -->
-                @if($booking->status !== 'pending' || $booking->hike_id !== null)
-                <div class="modern-card animate-fade-in-up">
-                    <div class="card-header-modern">
-                        <h2 class="section-title">
-                            <i class="bi bi-credit-card section-icon"></i>
-                            Payment Information
-                        </h2>
-                    </div>
-                    <div class="card-body-modern">
-                        <!-- Payment Status Banner -->
-                        @if($booking->status === 'payment_pending')
-                            <div class="payment-status-banner payment-required">
-                                <div class="status-icon">
-                                    <i class="bi bi-exclamation-triangle-fill"></i>
-                                </div>
-                                <div class="status-content">
-                                    <h3 class="status-title">Payment Required</h3>
-                                    <p class="status-message">Complete your payment to secure your booking</p>
-                                </div>
-                                <div class="status-action">
-                                    <a href="{{ route('user.bookings.payment', $booking) }}" class="btn-payment-action">
-                                        <i class="bi bi-credit-card"></i>
-                                        Pay Now
-                                    </a>
                                 </div>
                             </div>
-                        @elseif($booking->payment && $booking->payment->status === 'verified')
-                            <div class="payment-status-banner payment-verified">
-                                <div class="status-icon">
-                                    <i class="bi bi-check-circle-fill"></i>
-                                </div>
-                                <div class="status-content">
-                                    <h3 class="status-title">Payment Verified</h3>
-                                    <p class="status-message">Your payment has been confirmed</p>
-                                </div>
-                                @if($booking->payment->receipt_url)
-                                    <div class="status-action">
-                                        <a href="{{ $booking->payment->receipt_url }}" target="_blank" class="btn-receipt-action">
-                                            <i class="bi bi-download"></i>
-                                            Receipt
-                                        </a>
-                                    </div>
-                                @endif
-                            </div>
-                        @elseif($booking->payment && $booking->payment->status === 'pending')
-                            <div class="payment-status-banner payment-pending">
-                                <div class="status-icon">
-                                    <i class="bi bi-clock-fill"></i>
-                                </div>
-                                <div class="status-content">
-                                    <h3 class="status-title">Payment Under Review</h3>
-                                    <p class="status-message">We're verifying your payment proof</p>
-                                </div>
-                            </div>
-                        @elseif($booking->payment && $booking->payment->status === 'rejected')
-                            <div class="payment-status-banner payment-rejected">
-                                <div class="status-icon">
-                                    <i class="bi bi-x-circle-fill"></i>
-                                </div>
-                                <div class="status-content">
-                                    <h3 class="status-title">Payment Rejected</h3>
-                                    <p class="status-message">Your payment was rejected. Please resubmit payment proof.</p>
-                                </div>
-                                <div class="status-action">
-                                    <a href="{{ route('user.bookings.payment', $booking) }}" class="btn-payment-action">
-                                        <i class="bi bi-upload"></i>
-                                        Resubmit Payment
-                                    </a>
-                                </div>
-                            </div>
-                        @elseif($booking->status === 'rejected')
-                            <div class="payment-status-banner payment-not-required">
-                                <div class="status-icon">
-                                    <i class="bi bi-info-circle-fill"></i>
-                                </div>
-                                <div class="status-content">
-                                    <h3 class="status-title">No Payment Required</h3>
-                                    <p class="status-message">Booking was not approved</p>
-                                </div>
-                            </div>
-                        @endif
-
-                        <!-- Payment Details -->
-                        <div class="payment-details">
-                            <div class="info-row">
-                                <span class="info-label">Hiking Fee</span>
-                                <span class="info-value">₱{{ number_format($booking->hiking_fee, 2) }}</span>
-                            </div>
-                            @if($booking->guide_fee > 0)
-                                <div class="info-row">
-                                    <span class="info-label">Guide Fee</span>
-                                    <span class="info-value">₱{{ number_format($booking->guide_fee, 2) }}</span>
-                                </div>
-                            @endif
-                            @if($booking->porter_fee > 0)
-                                <div class="info-row">
-                                    <span class="info-label">Porter Fee</span>
-                                    <span class="info-value">₱{{ number_format($booking->porter_fee, 2) }}</span>
-                                </div>
-                            @endif
-                            <div class="info-row payment-highlight">
-                                <span class="info-label">Down Payment Required</span>
-                                <span class="info-value highlight">₱{{ number_format($booking->down_payment, 2) }}</span>
-                            </div>
-                            
-                            @if($booking->payment)
-                                <div class="payment-transaction-details">
-                                    <div class="info-row">
-                                        <span class="info-label">Payment Method</span>
-                                        <span class="info-value">{{ ucfirst($booking->payment->payment_method) }}</span>
-                                    </div>
-                                    <div class="info-row">
-                                        <span class="info-label">Reference</span>
-                                        <span class="info-value">{{ $booking->payment->transaction_id }}</span>
-                                    </div>
-                                    @if($booking->payment->verified_at)
-                                        <div class="info-row">
-                                            <span class="info-label">Verified At</span>
-                                            <span class="info-value">{{ $booking->payment->verified_at->format('M d, Y h:i A') }}</span>
-                                        </div>
+                            <div class="info-item">
+                                <div class="info-label">Payment Status</div>
+                                <div class="info-value">
+                                    @if($booking->payment && $booking->payment->status === 'verified')
+                                        <span class="status-badge confirmed">
+                                            <i class="bi bi-check-circle"></i>
+                                            Payment Verified
+                                        </span>
+                                    @elseif($booking->payment && $booking->payment->status === 'pending_verification')
+                                        <span class="status-badge payment_pending">
+                                            <i class="bi bi-clock"></i>
+                                            Pending Verification
+                                        </span>
+                                    @elseif($booking->payment && $booking->payment->status === 'rejected')
+                                        <span class="status-badge rejected">
+                                            <i class="bi bi-x-circle"></i>
+                                            Payment Rejected
+                                        </span>
+                                    @else
+                                        <span class="status-badge payment_pending">
+                                            <i class="bi bi-credit-card"></i>
+                                            Payment Required
+                                        </span>
                                     @endif
                                 </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-                @endif
-
-                <!-- Guide and Porter Details -->
-                @if($booking->guide || $booking->porter)
-                    <div class="modern-card animate-fade-in-up">
-                        <div class="card-header-modern">
-                            <h2 class="section-title">
-                                <i class="bi bi-people section-icon"></i>
-                                Assigned Staff
-                            </h2>
-                        </div>
-                        <div class="card-body-modern">
-                            @if($booking->guide)
-                                <div class="info-row">
-                                    <span class="info-label">Guide</span>
-                                    <span class="info-value">{{ $booking->guide->name }}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Guide Contact</span>
-                                    <span class="info-value">{{ $booking->guide->contact_number }}</span>
-                                </div>
-                            @endif
-                            @if($booking->porter)
-                                <div class="info-row">
-                                    <span class="info-label">Porter</span>
-                                    <span class="info-value">{{ $booking->porter->name }}</span>
-                                </div>
-                                <div class="info-row">
-                                    <span class="info-label">Porter Contact</span>
-                                    <span class="info-value">{{ $booking->porter->contact_number }}</span>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Special Requests -->
-                @if($booking->special_requests)
-                    <div class="modern-card animate-fade-in-up">
-                        <div class="card-header-modern">
-                            <h2 class="section-title">
-                                <i class="bi bi-chat-text section-icon"></i>
-                                Special Requests
-                            </h2>
-                        </div>
-                        <div class="card-body-modern">
-                            <p class="info-value">{{ $booking->special_requests }}</p>
-                        </div>
-                    </div>
-                @endif
-
-                <!-- Cancellation Details -->
-                @if($booking->status === 'cancelled')
-                    <div class="modern-card animate-fade-in-up">
-                        <div class="card-header-modern">
-                            <h2 class="section-title">
-                                <i class="bi bi-x-circle section-icon"></i>
-                                Cancellation Details
-                            </h2>
-                        </div>
-                        <div class="card-body-modern">
-                            <p class="info-value">{{ $booking->cancellation_reason }}</p>
-                        </div>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Quick Actions Section -->
-            <div class="modern-card animate-fade-in-up">
-                <div class="card-header-modern">
-                    <h2 class="section-title">
-                        <i class="bi bi-lightning-charge section-icon"></i>
-                        Quick Actions
-                    </h2>
-                </div>
-                <div class="card-body-modern">
-                    <div class="quick-actions-grid">
-                        <!-- Contact Support -->
-                        <div class="quick-action-item">
-                            <div class="action-icon-wrapper support">
-                                <i class="bi bi-headset"></i>
                             </div>
-                            <div class="action-content">
-                                <h4 class="action-title">Contact Support</h4>
-                                <p class="action-subtitle">Get help with your booking</p>
-                            </div>
-                            <a href="mailto:support@mtcagua.com?subject=Booking Support - {{ $booking->booking_reference }}" class="quick-action-btn">
-                                <i class="bi bi-envelope"></i>
-                            </a>
                         </div>
 
-                        @if($booking->payment && $booking->payment->receipt_url)
-                            <!-- View Receipt -->
-                            <div class="quick-action-item">
-                                <div class="action-icon-wrapper receipt">
-                                    <i class="bi bi-receipt"></i>
+                        <!-- Payment Progress Indicator -->
+                        @if(!$booking->payment || $booking->payment->status !== 'verified')
+                            <div class="payment-progress">
+                                <div class="progress-text">
+                                    <span>Payment Progress</span>
+                                    <span>{{ !$booking->payment ? '25%' : '75%' }}</span>
                                 </div>
-                                <div class="action-content">
-                                    <h4 class="action-title">Download Receipt</h4>
-                                    <p class="action-subtitle">Get your payment receipt</p>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: {{ !$booking->payment ? '25%' : '75%' }}"></div>
                                 </div>
-                                <a href="{{ $booking->payment->receipt_url }}" target="_blank" class="quick-action-btn">
-                                    <i class="bi bi-download"></i>
-                                </a>
+                                <small class="text-muted">
+                                    {{ !$booking->payment ? 'Upload payment proof to continue' : 'Payment under review' }}
+                                </small>
                             </div>
                         @endif
-
-                        @if(in_array($booking->status, ['approved', 'confirmed']) && $booking->hike_date > now())
-                            <!-- Request Reschedule -->
-                            <div class="quick-action-item">
-                                <div class="action-icon-wrapper reschedule">
-                                    <i class="bi bi-calendar-event"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4 class="action-title">Request Reschedule</h4>
-                                    <p class="action-subtitle">Change your hiking date</p>
-                                </div>
-                                <button type="button" class="quick-action-btn" data-bs-toggle="modal" data-bs-target="#rescheduleModal">
-                                    <i class="bi bi-calendar-plus"></i>
-                                </button>
-                            </div>
-                        @endif
-
-                        <!-- Share Booking -->
-                        <div class="quick-action-item">
-                            <div class="action-icon-wrapper share">
-                                <i class="bi bi-share"></i>
-                            </div>
-                            <div class="action-content">
-                                <h4 class="action-title">Share Booking</h4>
-                                <p class="action-subtitle">Share with friends</p>
-                            </div>
-                            <button type="button" class="quick-action-btn" onclick="shareBooking()">
-                                <i class="bi bi-share-fill"></i>
-                            </button>
-                        </div>
-
-                        @if($booking->status === 'confirmed')
-                            <!-- Emergency Contact -->
-                            <div class="quick-action-item">
-                                <div class="action-icon-wrapper emergency">
-                                    <i class="bi bi-telephone-fill"></i>
-                                </div>
-                                <div class="action-content">
-                                    <h4 class="action-title">Emergency Contact</h4>
-                                    <p class="action-subtitle">24/7 hiking support</p>
-                                </div>
-                                <a href="tel:+639123456789" class="quick-action-btn">
-                                    <i class="bi bi-telephone"></i>
-                                </a>
-                            </div>
-                        @endif
-
-                        <!-- Weather Updates -->
-                        <div class="quick-action-item">
-                            <div class="action-icon-wrapper weather">
-                                <i class="bi bi-cloud-sun"></i>
-                            </div>
-                            <div class="action-content">
-                                <h4 class="action-title">Weather Updates</h4>
-                                <p class="action-subtitle">Check hiking conditions</p>
-                            </div>
-                            <a href="https://weather.com" target="_blank" class="quick-action-btn">
-                                <i class="bi bi-arrow-up-right"></i>
-                            </a>
-                        </div>
                     </div>
                 </div>
             </div>
-
-            <!-- Action Cards -->
-            @if($booking->status === 'payment_pending')
-                <div class="modern-card animate-fade-in-up">
-                    <div class="card-body-modern">
-                        <div class="action-card-content">
-                            <div class="action-icon">
-                                <i class="bi bi-credit-card-2-front"></i>
-                            </div>
-                            <div class="action-text">
-                                <h3 class="action-title">Complete Your Payment</h3>
-                                <p class="action-description">
-                                    Upload your payment proof to secure your hiking spot. 
-                                    Down payment: <strong>₱{{ number_format($booking->down_payment, 2) }}</strong>
-                                </p>
-                                <div class="payment-methods">
-                                    <span class="payment-method-tag">GCash</span>
-                                    <span class="payment-method-tag">Bank Transfer</span>
-                                    <span class="payment-method-tag">PayMaya</span>
-                                </div>
-                            </div>
-                            <div class="action-buttons">
-                                <a href="{{ route('user.bookings.payment', $booking) }}" class="btn-primary-action">
-                                    <i class="bi bi-upload"></i>
-                                    Upload Payment Proof
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            @if($booking->status === 'pending')
-                <div class="modern-card animate-fade-in-up">
-                    <div class="card-body-modern">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-900">Manage Booking</h3>
-                                <p class="text-gray-600">You can cancel this booking if needed.</p>
-                            </div>
-                            <button type="button" 
-                                    onclick="showCancelModal()" 
-                                    class="btn btn-outline-danger">
-                                <i class="bi bi-x-circle"></i>
-                                Cancel Booking
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            @endif
         </div>
     </div>
+</div>
 
-    <!-- Beautiful Cancel Booking Modal - Only show for pending bookings -->
-    @if($booking->status === 'pending')
-        <div id="cancelModal" class="modal-backdrop">
-            <div class="modal-wrapper">
-                <div class="beautiful-modal">
-                    <!-- Close Button -->
-                    <button type="button" onclick="hideCancelModal()" class="modal-close">
-                        <i class="bi bi-x-lg"></i>
-                    </button>
-
-                    <!-- Modal Content -->
-                    <div class="modal-content">
-                        <!-- Icon Section -->
-                        <div class="modal-icon-section">
-                            <div class="danger-icon">
-                                <i class="bi bi-exclamation-triangle-fill"></i>
-                            </div>
+<!-- Cancel Booking Modal -->
+<div class="modal fade" id="cancelBookingModal" tabindex="-1" aria-labelledby="cancelBookingModalLabel" aria-hidden="true" style="z-index: 10001;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-danger text-white">
+                <h1 class="modal-title fs-5" id="cancelBookingModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Cancel Booking
+                </h1>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="text-center mb-4">
+                    <div class="display-1 text-warning mb-3">
+                        <i class="bi bi-exclamation-triangle"></i>
+                    </div>
+                    <h4 class="mb-3">Are you sure you want to cancel this booking?</h4>
+                    <p class="text-muted mb-0">This action cannot be undone.</p>
+                </div>
+                
+                <div class="alert alert-warning border-0 bg-warning bg-opacity-10">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-info-circle-fill text-warning me-3 mt-1"></i>
+                        <div>
+                            <strong>Cancellation Policy:</strong>
+                            <p class="mb-0 mt-1">Any payments made will be processed according to our cancellation policy. Please review the terms and conditions for refund details.</p>
                         </div>
-
-                        <!-- Text Section -->
-                        <div class="modal-text-section">
-                            <h3 class="modal-heading">Cancel Booking</h3>
-                            <p class="modal-description">
-                                Are you sure you want to cancel this booking? This action cannot be undone and may affect your future reservations.
-                            </p>
-                        </div>
-
-                        <!-- Form Section -->
-                        <form action="{{ route('user.bookings.cancel', $booking) }}" method="POST" class="modal-form">
-                            @csrf
-                            @method('PATCH')
-                            
-                            <div class="input-group">
-                                <label for="cancellation_reason" class="input-label">
-                                    Reason for cancellation
-                                </label>
-                                <textarea 
-                                    id="cancellation_reason" 
-                                    name="cancellation_reason" 
-                                    rows="3" 
-                                    class="modern-textarea"
-                                    placeholder="Please tell us why you're cancelling..."
-                                    required
-                                ></textarea>
-                            </div>
-
-                            <!-- Button Section -->
-                            <div class="modal-buttons">
-                                <button type="button" onclick="hideCancelModal()" class="btn-cancel">
-                                    Keep Booking
-                                </button>
-                                <button type="submit" class="btn-confirm">
-                                    Yes, Cancel
-                                </button>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer border-0 p-4 pt-0">
+                <button type="button" class="btn btn-outline-secondary me-2" data-bs-dismiss="modal">
+                    <i class="bi bi-arrow-left me-1"></i>
+                    Keep Booking
+                </button>
+                <form method="POST" action="{{ route('user.bookings.cancel', $booking) }}" class="d-inline">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Final confirmation: Cancel this booking?')">
+                        <i class="bi bi-x-circle me-1"></i>
+                        Cancel Booking
+                    </button>
+                </form>
+            </div>
         </div>
+    </div>
+</div>
 
-        @push('scripts')
-        <script>
-            function showCancelModal() {
-                document.getElementById('cancelModal').classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
+<script>
+    // Real-time Booking Notification System
+    class BookingNotificationSystem {
+        constructor() {
+            this.container = document.getElementById('notification-container');
+            this.bookingId = {{ $booking->id }};
+            this.lastStatusCheck = Date.now();
+            this.init();
+        }
+
+        init() {
+            // Try WebSocket connection first, fallback to polling
+            this.setupWebSocket() || this.setupPolling();
+        }
+
+        setupWebSocket() {
+            // WebSocket implementation would go here
+            // For now, return false to use polling
+            return false;
+        }
+
+        setupPolling() {
+            // Check for updates every 30 seconds
+            setInterval(() => {
+                this.checkForUpdates();
+            }, 30000);
+        }
+
+        async checkForUpdates() {
+            try {
+                const response = await fetch(`/api/bookings/${this.bookingId}/status`);
+                const data = await response.json();
+                
+                if (data.lastUpdated > this.lastStatusCheck) {
+                    this.handleStatusUpdate(data);
+                    this.lastStatusCheck = data.lastUpdated;
+                }
+            } catch (error) {
+                console.log('Status check failed:', error);
             }
+        }
 
-            function hideCancelModal() {
-                document.getElementById('cancelModal').classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
+        handleStatusUpdate(data) {
+            const { status, payment, message } = data;
+            
+            // Update page elements
+            this.updateStatusBadges(status, payment);
+            this.updateTimeline(status, payment);
+            
+            // Show notification
+            this.showNotification(
+                message || `Your booking status has been updated to: ${status}`,
+                status === 'confirmed' ? 'success' : status === 'cancelled' ? 'error' : 'info'
+            );
+        }
 
-            // Close modal when clicking outside
-            document.getElementById('cancelModal').addEventListener('click', function(e) {
-                if (e.target === this) {
-                    hideCancelModal();
+        updateStatusBadges(status, payment) {
+            const statusBadges = document.querySelectorAll('.status-badge');
+            statusBadges.forEach(badge => {
+                const isPaymentPending = status === 'payment_pending' || (status === 'confirmed' && (!payment || payment.status !== 'verified'));
+                const isConfirmed = status === 'confirmed' && payment && payment.status === 'verified';
+                
+                badge.className = `status-badge ${isPaymentPending ? 'payment_pending' : status.toLowerCase()}`;
+                badge.innerHTML = `
+                    <i class="bi bi-${status === 'pending' ? 'clock' : (isConfirmed ? 'check-circle' : (isPaymentPending ? 'credit-card' : 'x-circle'))}"></i>
+                    ${isPaymentPending ? 'Payment Pending' : (isConfirmed ? 'Confirmed' : status.charAt(0).toUpperCase() + status.slice(1))}
+                `;
+            });
+        }
+
+        updateTimeline(status, payment) {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            // Update timeline based on new status
+            timelineItems.forEach((item, index) => {
+                const icon = item.querySelector('.timeline-icon i');
+                
+                switch(index) {
+                    case 0: // Booking Submitted - always completed
+                        item.className = 'timeline-item completed';
+                        break;
+                    case 1: // Admin Approval
+                        if (status !== 'pending') {
+                            item.className = 'timeline-item completed';
+                            icon.className = 'bi bi-check';
+                        }
+                        break;
+                    case 2: // Payment
+                        if (payment && payment.status === 'verified') {
+                            item.className = 'timeline-item completed';
+                            icon.className = 'bi bi-check';
+                        }
+                        break;
                 }
             });
+        }
 
-            // Close modal with Escape key
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    hideCancelModal();
+        showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: 'check-circle-fill',
+                error: 'x-circle-fill',
+                warning: 'exclamation-triangle-fill',
+                info: 'info-circle-fill'
+            };
+
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <div class="notification-icon">
+                        <i class="bi bi-${icons[type]}"></i>
+                    </div>
+                    <div class="notification-message">${message}</div>
+                    <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
+            `;
+
+            this.container.appendChild(notification);
+
+            // Trigger animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.remove();
+                    }
+                }, 300);
+            }, 5000);
+        }
+    }
+
+    // Initialize notification system when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize the booking notification system
+        window.bookingNotifications = new BookingNotificationSystem();
+        
+        // Initialize Bootstrap modal with proper error handling
+        const cancelBookingModal = document.getElementById('cancelBookingModal');
+        let modalInstance = null;
+        
+        if (cancelBookingModal) {
+            try {
+                // Create modal instance
+                modalInstance = new bootstrap.Modal(cancelBookingModal, {
+                    backdrop: 'static',
+                    keyboard: true,
+                    focus: true
+                });
+                
+                // Handle modal events
+                cancelBookingModal.addEventListener('show.bs.modal', function (event) {
+                    console.log('Cancel booking modal is opening');
+                });
+                
+                cancelBookingModal.addEventListener('shown.bs.modal', function (event) {
+                    console.log('Cancel booking modal is fully visible');
+                    // Focus on the "Keep Booking" button for better UX
+                    const keepButton = cancelBookingModal.querySelector('[data-bs-dismiss="modal"]');
+                    if (keepButton) {
+                        keepButton.focus();
+                    }
+                });
+                
+                cancelBookingModal.addEventListener('hide.bs.modal', function (event) {
+                    console.log('Cancel booking modal is closing');
+                });
+                
+            } catch (error) {
+                console.error('Error initializing cancel booking modal:', error);
+            }
+        }
+        
+        // Handle trigger button clicks
+        const cancelButton = document.querySelector('[data-bs-target="#cancelBookingModal"]');
+        if (cancelButton && modalInstance) {
+            cancelButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                try {
+                    modalInstance.show();
+                } catch (error) {
+                    console.error('Error showing cancel booking modal:', error);
+                    // Fallback: try to show modal using data attributes
+                    cancelButton.setAttribute('data-bs-toggle', 'modal');
+                    cancelButton.setAttribute('data-bs-target', '#cancelBookingModal');
                 }
             });
-        </script>
-        @endpush
-    @endif
+    });
+
+    // Global function for manual notifications
+    window.showBookingNotification = function(message, type = 'info') {
+        if (window.bookingNotifications) {
+            window.bookingNotifications.showNotification(message, type);
+        }
+    };
+</script>
 </x-app-layout>

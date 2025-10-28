@@ -22,11 +22,11 @@ return [
             'foreign' => env('FOREIGN_FEE', 350),
         ],
         'guide' => [
-            'day_hike' => env('GUIDE_DAY_HIKE_FEE', 500),
+            'day_trek' => env('GUIDE_DAY_TREK_FEE', 500),
             'overnight' => env('GUIDE_OVERNIGHT_FEE', 1000),
         ],
         'porter' => [
-            'day_hike' => env('PORTER_DAY_HIKE_FEE', 500),
+            'day_trek' => env('PORTER_DAY_TREK_FEE', 500),
             'overnight' => env('PORTER_OVERNIGHT_FEE', 1000),
         ],
         'tricycle_rental' => env('TRICYCLE_RENTAL_FEE', 800),

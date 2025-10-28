@@ -252,12 +252,24 @@
             border: 2px solid transparent;
             background: linear-gradient(white, white) padding-box, var(--primary-gradient) border-box;
             backdrop-filter: blur(10px);
+            color: var(--primary-color, #667eea) !important;
+        }
+        
+        .quick-action .fw-semibold,
+        .quick-action i {
+            color: var(--primary-color, #667eea) !important;
         }
         
         .quick-action:hover {
             transform: translateY(-3px) scale(1.05);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.25);
-            color: white;
+            color: white !important;
+            text-decoration: none;
+        }
+        
+        .quick-action:hover .fw-semibold,
+        .quick-action:hover i {
+            color: white !important;
         }
         
         .quick-action:hover::before {
@@ -454,41 +466,11 @@
                             </h5>
                         </div>
                         <div class="card-body p-4">
-                            <div class="row g-3">
+                            <div class="row g-3 justify-content-center">
                                 <div class="col-6 col-lg-auto">
                                     <a href="{{ route('user.bookings.create') }}" class="btn btn-primary w-100 quick-action py-3" title="{{ __('Create a new booking') }}" data-bs-toggle="tooltip">
                                         <i class="bi bi-plus-circle me-2 fs-5"></i> 
                                         <div class="fw-semibold">{{ __('Create Booking') }}</div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-lg-auto">
-                                    <a href="{{ route('hikes.index') }}" class="btn btn-outline-primary w-100 quick-action py-3" title="{{ __('Browse available hikes') }}" data-bs-toggle="tooltip">
-                                        <i class="bi bi-geo-alt me-2 fs-5"></i> 
-                                        <div class="fw-semibold">{{ __('Browse Hikes') }}</div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-lg-auto">
-                                    <a href="{{ route('user.bookings.index') }}" class="btn btn-outline-primary w-100 quick-action py-3" title="{{ __('View your bookings') }}" data-bs-toggle="tooltip">
-                                        <i class="bi bi-calendar-check me-2 fs-5"></i> 
-                                        <div class="fw-semibold">{{ __('My Bookings') }}</div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-lg-auto">
-                                    <a href="{{ route('user.announcements.index') }}" class="btn btn-outline-primary w-100 quick-action py-3" title="{{ __('Latest announcements') }}" data-bs-toggle="tooltip">
-                                        <i class="bi bi-megaphone me-2 fs-5"></i> 
-                                        <div class="fw-semibold">{{ __('Announcements') }}</div>
-                                    </a>
-                                </div>
-                                <div class="col-6 col-lg-auto">
-                                    <a href="{{ route('chat.index') }}" class="btn btn-outline-primary w-100 quick-action py-3" title="{{ __('Your messages') }}" data-bs-toggle="tooltip">
-                                        <i class="bi bi-chat-dots me-2 fs-5"></i> 
-                                        <div class="fw-semibold">{{ __('Messages') }}</div>
-                                    </a>
-                                </div>
-                                <div class="col-12 col-lg-auto">
-                                    <a href="{{ route('user.profile.show') }}" class="btn btn-outline-secondary w-100 quick-action py-3" title="{{ __('Manage your profile') }}" data-bs-toggle="tooltip">
-                                        <i class="bi bi-person-gear me-2 fs-5"></i> 
-                                        <div class="fw-semibold">{{ __('Edit Profile') }}</div>
                                     </a>
                                 </div>
                             </div>
@@ -509,7 +491,7 @@
                                     </div>
                                     <div class="h4 mb-0 fw-bold text-gradient">{{ $stats['upcomingCount'] ?? 0 }}</div>
                                     <div class="small text-muted mt-2">
-                                        <i class="bi bi-calendar-event me-1"></i>{{ __('Scheduled hikes') }}
+                                        <i class="bi bi-calendar-event me-1"></i>{{ __('Scheduled treks') }}
                                     </div>
                                 </div>
                                 <div class="stat-icon primary">
@@ -545,7 +527,7 @@
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
                                     <div class="text-xs text-uppercase fw-bold text-success mb-1">
-                                        {{ __('Completed Hikes') }}
+                                        {{ __('Completed Treks') }}
                                     </div>
                                     <div class="h5 mb-0 fw-bold">{{ $stats['completedCount'] ?? 0 }}</div>
                                     <div class="small text-muted mt-2">
@@ -598,10 +580,18 @@
                                 @forelse ($upcomingBookings as $booking)
                                     <li class="list-group-item d-flex justify-content-between align-items-start p-3 border-bottom">
                                         <div>
-                                            <div class="fw-bold">{{ $booking->hike->trail }}</div>
+                                            <div class="fw-bold">
+                                                @if($booking->hike)
+                                    {{ $booking->hike->trail }}
+                                @else
+                                    {{ $booking->trail ?? 'Trail information not available' }}
+                                @endif
+                                            </div>
                                             <div class="text-muted small">
-                                                <i class="bi bi-calendar3 me-1"></i>{{ $booking->hike->date->format('M d, Y') }} 
-                                                <i class="bi bi-clock ms-2 me-1"></i>{{ $booking->hike->start_time->format('h:i A') }}
+                                                <i class="bi bi-calendar3 me-1"></i>{{ $booking->trek_date ? $booking->trek_date->format('M d, Y') : 'Date not set' }}
+                                                @if($booking->start_time)
+                                                    <i class="bi bi-clock ms-2 me-1"></i>{{ $booking->start_time->format('h:i A') }}
+                                                @endif
                                             </div>
                                             <span class="badge rounded-pill {{ $booking->status === 'approved' ? 'bg-success' : 'bg-warning' }} mt-2">
                                                 <i class="bi {{ $booking->status === 'approved' ? 'bi-check-circle' : 'bi-hourglass-split' }} me-1"></i>
@@ -620,8 +610,8 @@
                                             <i class="bi bi-calendar-x fs-3 d-block mb-2"></i>
                                             {{ __('No upcoming bookings found.') }}
                                         </div>
-                                        <a href="{{ route('hikes.index') }}" class="btn btn-sm btn-outline-primary mt-2">
-                                            <i class="bi bi-plus-circle me-1"></i>{{ __('Book a hike') }}
+                                        <a href="{{ route('user.bookings.create') }}" class="btn btn-sm btn-outline-primary mt-2">
+                                            <i class="bi bi-plus-circle me-1"></i>{{ __('Book a trek') }}
                                         </a>
                                     </li>
                                 @endforelse
@@ -630,46 +620,7 @@
                     </div>
                 </div>
 
-                <!-- Available Hikes -->
-                <div class="col-lg-6">
-                    <div class="card dashboard-card shadow-sm h-100">
-                        <div class="card-header-custom d-flex justify-content-between align-items-center" style="background: linear-gradient(135deg, #36b9cc 0%, #1a8a98 100%);">
-                            <h6 class="m-0 fw-bold text-white">
-                                <i class="bi bi-map me-2"></i>{{ __('Available Hikes') }}
-                            </h6>
-                            <a href="{{ route('hikes.index') }}" class="btn btn-sm btn-light">
-                                <i class="bi bi-arrow-right me-1"></i>{{ __('Browse all') }}
-                            </a>
-                        </div>
-                        <div class="card-body p-0">
-                            <ul class="list-group list-group-flush">
-                                @forelse ($availableHikes as $hike)
-                                    <li class="list-group-item d-flex justify-content-between align-items-start p-3 border-bottom">
-                                        <div>
-                                            <div class="fw-bold">{{ $hike->trail }}</div>
-                                            <div class="text-muted small">
-                                                <i class="bi bi-calendar3 me-1"></i>{{ $hike->date->format('M d, Y') }} 
-                                                <i class="bi bi-clock ms-2 me-1"></i>{{ $hike->start_time->format('h:i A') }}
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <a href="{{ route('user.bookings.create', $hike) }}" class="btn btn-sm btn-info text-white rounded-pill">
-                                                <i class="bi bi-plus-circle me-1"></i>{{ __('Book now') }}
-                                            </a>
-                                        </div>
-                                    </li>
-                                @empty
-                                    <li class="list-group-item p-4 text-center">
-                                        <div class="text-muted">
-                                            <i class="bi bi-calendar2-x fs-3 d-block mb-2"></i>
-                                            {{ __('No upcoming hikes are currently open.') }}
-                                        </div>
-                                    </li>
-                                @endforelse
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+
             </div>
 
             <!-- Announcements -->

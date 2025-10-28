@@ -47,15 +47,7 @@
                     </a>
                 </li>
                 
-                <li class="nav-item">
-                    <a href="{{ route('hikes.index') }}" class="nav-link {{ request()->routeIs('hikes.*') ? 'active' : '' }}">
-                        <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 8L21 12L17 16M3 12H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M8 3L4 7L8 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <span>Browse Hikes</span>
-                    </a>
-                </li>
+
 
                 <li class="nav-item">
                     <a href="{{ route('user.bookings.index') }}" class="nav-link {{ request()->routeIs('user.bookings.*') ? 'active' : '' }}">
@@ -178,7 +170,7 @@
             <ul class="mobile-nav-links">
                 <li><a href="{{ route('home') }}" class="mobile-nav-link {{ request()->routeIs('home') ? 'active' : '' }}">Home</a></li>
                 <li><a href="{{ route('dashboard') }}" class="mobile-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a></li>
-                <li><a href="{{ route('hikes.index') }}" class="mobile-nav-link {{ request()->routeIs('hikes.*') ? 'active' : '' }}">Browse Hikes</a></li>
+
                 <li><a href="{{ route('user.bookings.index') }}" class="mobile-nav-link {{ request()->routeIs('user.bookings.*') ? 'active' : '' }}">My Bookings</a></li>
                 <li><a href="{{ route('user.reviews.index') }}" class="mobile-nav-link {{ request()->routeIs('user.reviews.*') ? 'active' : '' }}">My Reviews</a></li>
                 <li><a href="{{ route('chat.index') }}" class="mobile-nav-link {{ request()->routeIs('chat.*') ? 'active' : '' }}">Messages</a></li>

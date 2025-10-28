@@ -194,7 +194,7 @@
                                 </span>
                             </div>
                             <div class="col-md-6">
-                                <strong>Total Hikes:</strong> {{ $guide->total_hikes }}
+                                <strong>Total Treks:</strong> {{ $guide->total_hikes }}
                             </div>
                         </div>
                     </div>

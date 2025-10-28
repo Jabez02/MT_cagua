@@ -27,9 +27,9 @@ class ContactSettingsSeeder extends Seeder
             'faq_title' => 'Frequently Asked Questions',
             
             // FAQ settings
-            'faq1_question' => 'How do I book a hike?',
-            'faq1_answer' => 'You can book a hike through our website by selecting your preferred trail and date. Create an account or log in to complete your booking.',
-            'faq2_question' => 'What should I bring for a hike?',
+            'faq1_question' => 'How do I book a trek?',
+            'faq1_answer' => 'You can book a trek through our website by selecting your preferred trail and date. Create an account or log in to complete your booking.',
+            'faq2_question' => 'What should I bring for a trek?',
             'faq2_answer' => 'Essential items include appropriate footwear, weather-suitable clothing, water, snacks, sunscreen, and a first aid kit. A detailed packing list will be provided upon booking.',
             'faq3_question' => 'Are there age restrictions for hiking?',
             'faq3_answer' => 'Different trails have different age requirements. Easy trails are suitable for all ages, while more challenging ones may have minimum age requirements. Check the trail details for specific information.',

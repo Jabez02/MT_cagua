@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Review;
-use App\Models\Hike;
 use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +16,7 @@ class ReviewController extends Controller
     public function index()
     {
         $reviews = Review::where('user_id', Auth::id())
-            ->with(['hike'])
+            ->with(['booking'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         
@@ -27,36 +26,31 @@ class ReviewController extends Controller
     /**
      * Show the form for creating a new review.
      */
-    public function create(Hike $hike)
+    public function create(Booking $booking)
     {
-        // Check if user has completed this hike
-        $hasCompletedHike = Booking::where('user_id', Auth::id())
-            ->where('hike_id', $hike->id)
-            ->where('status', 'completed')
-            ->exists();
-
-        if (!$hasCompletedHike) {
+        // Check if user has completed this booking
+        if ($booking->user_id !== Auth::id() || $booking->status !== 'completed') {
             return redirect()->route('user.bookings.index')
-                ->with('error', 'You can only review hikes you have completed.');
+                ->with('error', 'You can only review completed bookings.');
         }
 
-        // Check if user has already reviewed this hike
+        // Check if user has already reviewed this booking
         $hasReviewed = Review::where('user_id', Auth::id())
-            ->where('hike_id', $hike->id)
+            ->where('booking_id', $booking->id)
             ->exists();
 
         if ($hasReviewed) {
             return redirect()->route('user.reviews.index')
-                ->with('error', 'You have already reviewed this hike.');
+                ->with('error', 'You have already reviewed this booking.');
         }
 
-        return view('user.reviews.create', compact('hike'));
+        return view('user.reviews.create', compact('booking'));
     }
 
     /**
      * Store a newly created review in storage.
      */
-    public function store(Request $request, Hike $hike)
+    public function store(Request $request, Booking $booking)
     {
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
@@ -65,7 +59,7 @@ class ReviewController extends Controller
 
         $review = Review::create([
             'user_id' => Auth::id(),
-            'hike_id' => $hike->id,
+            'booking_id' => $booking->id,
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
             'is_verified' => false,
@@ -85,7 +79,7 @@ class ReviewController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $review->load(['hike', 'moderator']);
+        $review->load(['booking', 'moderator']);
         return view('user.reviews.show', compact('review'));
     }
 

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Hike;
 use App\Models\Review;
 use App\Services\SystemSettingsService;
 use Illuminate\Http\Request;
@@ -18,12 +17,6 @@ class HomeController extends Controller
     
     public function index()
     {
-        // Get featured hikes for the homepage
-        $featuredHikes = Hike::where('status', 'open')
-            ->orderBy('created_at', 'desc')
-            ->take(3)
-            ->get();
-
         // Get testimonials for the homepage
         $testimonials = Review::with('user')
             ->where('is_verified', true)
@@ -41,7 +34,6 @@ class HomeController extends Controller
         $heroImage = \App\Models\HeroImage::getActive();
 
         return view('home', compact(
-            'featuredHikes', 
             'testimonials', 
             'aboutSettings', 
             'contactSettings',

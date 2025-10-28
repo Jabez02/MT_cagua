@@ -22,7 +22,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay San Miguel, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Mountain Climbing', 'Wildlife Spotting', 'Photography Tours']),
-                'total_hikes' => 45,
+                'total_treks' => 45,
             ],
             [
                 'name' => 'Maria Elena Santos',
@@ -30,7 +30,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Centro, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Bird Watching', 'Nature Photography', 'Botanical Tours']),
-                'total_hikes' => 32,
+                'total_treks' => 32,
             ],
             [
                 'name' => 'Roberto "Bobby" Cruz',
@@ -38,7 +38,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Pallua Norte, Tuguegarao City, Cagayan',
                 'status' => 'assigned',
                 'specializations' => json_encode(['Rock Climbing', 'Adventure Tours', 'Survival Training']),
-                'total_hikes' => 67,
+                'total_treks' => 67,
             ],
             [
                 'name' => 'Ana Marie Reyes',
@@ -46,7 +46,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Caritan Norte, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Eco-Tourism', 'Cultural Tours', 'Educational Hikes']),
-                'total_hikes' => 28,
+                'total_treks' => 28,
             ],
             [
                 'name' => 'Miguel Angelo Torres',
@@ -54,7 +54,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Ugac Norte, Tuguegarao City, Cagayan',
                 'status' => 'unavailable',
                 'specializations' => json_encode(['Night Hiking', 'Camping', 'Wilderness Survival']),
-                'total_hikes' => 53,
+                'total_treks' => 53,
             ],
             [
                 'name' => 'Carmen Isabella Flores',
@@ -62,7 +62,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Atulayan Norte, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Family Tours', 'Beginner Hiking', 'Safety Training']),
-                'total_hikes' => 19,
+                'total_treks' => 19,
             ],
             [
                 'name' => 'Eduardo "Eddie" Villanueva',
@@ -70,7 +70,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Carig, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Advanced Climbing', 'Technical Routes', 'Equipment Training']),
-                'total_hikes' => 78,
+                'total_treks' => 78,
             ],
             [
                 'name' => 'Rosario "Rose" Garcia',
@@ -78,7 +78,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Pengue-Ruyu, Tuguegarao City, Cagayan',
                 'status' => 'assigned',
                 'specializations' => json_encode(['Medicinal Plants', 'Herbal Tours', 'Traditional Knowledge']),
-                'total_hikes' => 41,
+                'total_treks' => 41,
             ],
             [
                 'name' => 'Francisco "Frank" Dela Cruz',
@@ -86,7 +86,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Tanza, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Historical Tours', 'Cultural Heritage', 'Storytelling']),
-                'total_hikes' => 36,
+                'total_treks' => 36,
             ],
             [
                 'name' => 'Luz Marina Aquino',
@@ -94,7 +94,7 @@ class GuideSeeder extends Seeder
                 'address' => 'Barangay Buntun, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'specializations' => json_encode(['Sunrise Tours', 'Meditation Hikes', 'Wellness Activities']),
-                'total_hikes' => 24,
+                'total_treks' => 24,
             ],
         ];
 

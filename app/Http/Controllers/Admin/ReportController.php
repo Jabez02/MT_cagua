@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\User;
-use App\Models\Hike;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Carbon\Carbon;

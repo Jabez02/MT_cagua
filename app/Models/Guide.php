@@ -15,11 +15,11 @@ class Guide extends Model
         'address',
         'status',
         'specializations',
-        'total_hikes',
+        'total_treks',
     ];
 
     protected $casts = [
-        'total_hikes' => 'integer',
+        'total_treks' => 'integer',
     ];
 
     // Status constants
@@ -71,9 +71,82 @@ class Guide extends Model
         return $this->status === self::STATUS_ASSIGNED;
     }
 
-    public function incrementHikes()
+    /**
+     * Check if the guide is available on a specific date
+     * 
+     * @param string $date
+     * @return bool
+     */
+    public function isAvailableOnDate($date)
     {
-        $this->increment('total_hikes');
+        // Check if guide has any active bookings on this date
+        return !$this->bookings()
+            ->whereDate('trek_date', $date)
+            ->whereNotIn('status', ['cancelled', 'completed'])
+            ->exists();
+    }
+
+    /**
+     * Get all bookings for a specific date
+     * 
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getBookingsForDate($date)
+    {
+        return $this->bookings()
+            ->whereDate('trek_date', $date)
+            ->whereNotIn('status', ['cancelled', 'completed'])
+            ->with('user')
+            ->get();
+    }
+
+    /**
+     * Scope to get guides available on a specific date
+     * 
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $date
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeAvailableOnDate($query, $date)
+    {
+        return $query->whereDoesntHave('bookings', function ($q) use ($date) {
+            $q->whereDate('trek_date', $date)
+              ->whereNotIn('status', ['cancelled', 'completed']);
+        });
+    }
+
+    /**
+     * Get availability status for a date range
+     * 
+     * @param string $startDate
+     * @param string $endDate
+     * @return array
+     */
+    public function getAvailabilityForDateRange($startDate, $endDate)
+    {
+        $bookings = $this->bookings()
+            ->whereBetween('trek_date', [$startDate, $endDate])
+            ->whereNotIn('status', ['cancelled', 'completed'])
+            ->pluck('trek_date')
+            ->toArray();
+
+        $availability = [];
+        $current = new \DateTime($startDate);
+        $end = new \DateTime($endDate);
+
+        while ($current <= $end) {
+            $dateStr = $current->format('Y-m-d');
+            $availability[$dateStr] = !in_array($dateStr, $bookings);
+            $current->modify('+1 day');
+        }
+
+        return $availability;
+    }
+
+    public function incrementTreks()
+    {
+        $this->increment('total_treks');
     }
 
     public function getStatusBadgeClass()

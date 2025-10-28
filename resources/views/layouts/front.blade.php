@@ -36,7 +36,7 @@
                         <h5 class="fw-bold mb-3">{{ __('Quick Links') }}</h5>
                         <ul class="list-unstyled">
                             <li><a href="{{ route('home') }}" class="text-decoration-none text-muted">{{ __('Home') }}</a></li>
-                            <li><a href="{{ route('hikes.index') }}" class="text-decoration-none text-muted">{{ __('Hikes') }}</a></li>
+    
                             <li><a href="{{ route('about') }}" class="text-decoration-none text-muted">{{ __('About') }}</a></li>
                             <li><a href="{{ route('contact') }}" class="text-decoration-none text-muted">{{ __('Contact') }}</a></li>
                         </ul>

@@ -1109,6 +1109,17 @@
                                             </form>
                                         @endif
                                     @endif
+                                    @if($booking->status === 'confirmed')
+                                        <form action="{{ route('admin.bookings.complete', $booking) }}" method="POST" class="d-inline me-2">
+                                            @csrf
+                                            @method('PATCH')
+                                            <button type="submit" class="btn-modern btn-primary btn-sm" 
+                                                    onclick="return confirm('Are you sure you want to mark this booking as completed? This will free up the assigned guide and porter.')">
+                                                <i class="bi bi-check-circle"></i>
+                                                {{ __('Mark as Completed') }}
+                                            </button>
+                                        </form>
+                                    @endif
                                     @if($booking->status !== 'cancelled')
                                         <button type="button" class="btn-modern btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#cancelBookingModal">
                                             <i class="bi bi-slash-circle"></i>

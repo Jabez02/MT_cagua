@@ -240,7 +240,7 @@
                                     <th>Contact</th>
                                     <th>Status</th>
                                     <th>Specializations</th>
-                                    <th>Total Hikes</th>
+                                    <th>Total Treks</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>

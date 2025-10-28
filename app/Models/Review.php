@@ -17,11 +17,10 @@ class Review extends Model
      */
     protected $fillable = [
         'user_id',
-        'hike_id',
+        'booking_id',
         'rating',
         'comment',
-        'is_verified',
-        'is_public',
+        'status',
         'moderated_by',
         'moderated_at'
     ];
@@ -46,11 +45,11 @@ class Review extends Model
     }
 
     /**
-     * Get the hike that was reviewed.
+     * Get the booking that was reviewed.
      */
-    public function hike(): BelongsTo
+    public function booking(): BelongsTo
     {
-        return $this->belongsTo(Hike::class);
+        return $this->belongsTo(Booking::class);
     }
 
     /**

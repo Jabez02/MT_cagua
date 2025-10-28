@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Booking;
-use App\Models\Hike;
 use App\Models\Review;
 use App\Models\Payment;
 use Carbon\Carbon;
@@ -37,7 +36,6 @@ class AdminController extends Controller
         $stats = [
             'total_users' => User::count(),
             'total_bookings' => Booking::count(),
-            'active_hikes' => Hike::where('status', 'open')->count(),
             'pending_reviews' => Review::where('is_verified', false)->count(),
             'revenue_this_month' => Booking::whereMonth('created_at', $now->month)
                 ->whereYear('created_at', $now->year)
@@ -76,7 +74,7 @@ class AdminController extends Controller
         ];
 
         // Recent activity
-        $recentBookings = Booking::with('user', 'hike')
+        $recentBookings = Booking::with('user')
             ->latest()
             ->take(5)
             ->get();

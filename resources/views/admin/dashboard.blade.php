@@ -851,10 +851,6 @@
                         <i class="bi bi-people"></i>
                         Manage Users
                     </a>
-                    <a href="{{ route('admin.hikes.create') }}" class="header-btn">
-                        <i class="bi bi-plus-circle"></i>
-                        New Hike
-                    </a>
                     <a href="{{ route('admin.reports.index') }}" class="header-btn">
                         <i class="bi bi-graph-up"></i>
                         View Reports
@@ -891,21 +887,6 @@
                     <div class="stat-change {{ $percentageChanges['bookings_change'] >= 0 ? 'positive' : 'negative' }}">
                         <i class="bi bi-arrow-{{ $percentageChanges['bookings_change'] >= 0 ? 'up' : 'down' }}"></i>
                         {{ $percentageChanges['bookings_change'] >= 0 ? '+' : '' }}{{ $percentageChanges['bookings_change'] }}% this week
-                    </div>
-                </div>
-
-                <!-- Active Hikes -->
-                <div class="stat-card info animate-fade-in-up">
-                    <div class="stat-header">
-                        <div class="stat-icon info">
-                            <i class="bi bi-geo-alt"></i>
-                        </div>
-                    </div>
-                    <div class="stat-value">{{ number_format($stats['active_hikes']) }}</div>
-                    <div class="stat-label">Active Hikes</div>
-                    <div class="stat-change neutral">
-                        <i class="bi bi-dash"></i>
-                        No change
                     </div>
                 </div>
 
@@ -947,46 +928,11 @@
                     Quick Actions
                 </h3>
                 <div class="actions-grid">
-                    <a href="{{ route('admin.manage-user.index') }}" class="action-btn">
-                        <div class="action-icon">
-                            <i class="bi bi-people"></i>
-                        </div>
-                        <div class="action-label">Manage Users</div>
-                    </a>
-                    
-                    <a href="{{ route('admin.reviews.index') }}" class="action-btn">
-                        <div class="action-icon">
-                            <i class="bi bi-star"></i>
-                        </div>
-                        <div class="action-label">Review Hikes</div>
-                    </a>
-                    
-                    <a href="{{ route('chat.index') }}" class="action-btn">
-                        <div class="action-icon">
-                            <i class="bi bi-chat-dots"></i>
-                        </div>
-                        <div class="action-label">Messages</div>
-                    </a>
-                    
                     <a href="{{ route('admin.reports.index') }}" class="action-btn">
                         <div class="action-icon">
                             <i class="bi bi-graph-up"></i>
                         </div>
                         <div class="action-label">Reports</div>
-                    </a>
-
-                    <a href="{{ route('admin.hikes.create') }}" class="action-btn">
-                        <div class="action-icon">
-                            <i class="bi bi-plus-circle"></i>
-                        </div>
-                        <div class="action-label">New Hike</div>
-                    </a>
-
-                    <a href="{{ route('admin.bookings.index') }}" class="action-btn">
-                        <div class="action-icon">
-                            <i class="bi bi-calendar-event"></i>
-                        </div>
-                        <div class="action-label">Bookings</div>
                     </a>
 
                     <a href="{{ route('admin.guides.index') }}" class="action-btn">
@@ -1001,6 +947,20 @@
                             <i class="bi bi-backpack"></i>
                         </div>
                         <div class="action-label">Manage Porters</div>
+                    </a>
+
+                    <a href="{{ route('admin.payment-methods.index') }}" class="action-btn">
+                        <div class="action-icon">
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+                        <div class="action-label">Payment Methods</div>
+                    </a>
+
+                    <a href="{{ route('admin.settings.index') }}" class="action-btn">
+                        <div class="action-icon">
+                            <i class="bi bi-gear"></i>
+                        </div>
+                        <div class="action-label">Settings</div>
                     </a>
                 </div>
             </div>
@@ -1046,7 +1006,7 @@
                             <div class="activity-title">New Booking</div>
                             <div class="activity-description">
                                 <strong>{{ $booking->user->name }}</strong> booked 
-                                <strong>{{ $booking->hike->name ?? 'Unknown Hike' }}</strong>
+                                <strong>{{ $booking->trail ?? 'Custom Booking' }}</strong>
                             </div>
                         </div>
                         <div class="activity-time">

@@ -10,10 +10,10 @@
             <div class="card shadow">
                 <div class="card-body">
                     <div class="mb-4">
-                        <h3 class="fs-5 fw-medium">{{ $review->hike->trail }}</h3>
-                        <p class="text-muted small">
-                            {{ $review->hike->date->format('M d, Y') }} at {{ $review->hike->start_time->format('h:i A') }}
-                        </p>
+                        <h3 class="fs-5 fw-medium">{{ $review->booking->trail }}</h3>
+            <p class="text-muted small">
+                {{ \Carbon\Carbon::parse($review->booking->trek_date)->format('M d, Y') }} at {{ \Carbon\Carbon::parse($review->booking->start_time)->format('h:i A') }}
+            </p>
                     </div>
 
                     <form method="POST" action="{{ route('user.reviews.update', $review) }}">
@@ -43,7 +43,7 @@
                             <label for="comment" class="form-label">Your Review</label>
                             <textarea id="comment" name="comment" rows="4" 
                                 class="form-control"
-                                placeholder="Share your experience about this hike...">{{ old('comment', $review->comment) }}</textarea>
+                                placeholder="Share your experience about this trek...">{{ old('comment', $review->comment) }}</textarea>
                             <div class="form-text">
                                 Minimum 10 characters. Your review will need to be moderated again after editing.
                             </div>

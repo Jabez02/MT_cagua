@@ -873,10 +873,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div class="page-header">
-            <h2 class="fs-4 fw-semibold text-body mb-0">{{ __('Book a Hike') }}</h2>
-            <a href="{{ route('hikes.index') }}" class="btn-back">
+            <h2 class="fs-4 fw-semibold text-body mb-0">{{ __('Create Custom Booking') }}</h2>
+            <a href="{{ route('user.bookings.index') }}" class="btn-back">
                 <i class="bi bi-arrow-left"></i> 
-                <span>{{ __('Back to Hikes') }}</span>
+                <span>{{ __('Back to Bookings') }}</span>
             </a>
         </div>
     </x-slot>
@@ -947,62 +947,24 @@
                                     
                                     <div class="section-content"
                                     @if(!$hike)
-                                    <!-- Booking Type Selection -->
+                                    <!-- Custom Booking Type Selection -->
                                     <div class="row g-4 mb-4">
                                         <div class="col-md-12">
                                             <label class="form-label">{{ __('Booking Type') }}</label>
                                             <div class="btn-group w-100" role="group" aria-label="Booking type">
-                                                <input type="radio" class="btn-check" name="booking_type" id="existing_hike" value="existing" checked>
-                                                <label class="btn btn-outline-primary" for="existing_hike">
-                                                    <i class="bi bi-calendar-check me-2"></i>{{ __('Select Existing Hike') }}
-                                                </label>
-                                                
-                                                <input type="radio" class="btn-check" name="booking_type" id="custom_booking" value="custom">
+                                                <input type="radio" class="btn-check" name="booking_type" id="custom_booking" value="custom" checked>
                                                 <label class="btn btn-outline-primary" for="custom_booking">
                                                     <i class="bi bi-plus-circle me-2"></i>{{ __('Create Custom Booking') }}
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Existing Hike Selection -->
-                                    <div class="row g-4 mb-3" id="existing-hike-section">
-                                        <div class="col-md-12">
-                                            <label for="hike_id" class="form-label">
-                                                {{ __('Select Hike Schedule') }}
-                                                <span class="text-danger">*</span>
-                                            </label>
-                                            <select name="hike_id" id="hike_id" class="form-select">
-                                                <option value="">{{ __('Choose a hike schedule') }}</option>
-                                                @foreach(\App\Models\Hike::where('status', 'open')->where('date', '>=', now())->orderBy('date')->get() as $availableHike)
-                                                    <option value="{{ $availableHike->id }}" 
-                                                            data-date="{{ $availableHike->date->format('Y-m-d') }}"
-                                                            data-time="{{ $availableHike->start_time->format('H:i') }}"
-                                                            data-trail="{{ $availableHike->trail }}"
-                                                            data-capacity="{{ $availableHike->capacity }}"
-                                                            data-current="{{ $availableHike->current_bookings }}">
-                                                        {{ $availableHike->date->format('M d, Y') }} - 
-                                                        {{ $availableHike->start_time->format('h:i A') }} - 
-                                                        {{ $availableHike->trail }} 
-                                                        ({{ $availableHike->capacity - $availableHike->current_bookings }} slots available)
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            <small class="text-muted d-block mt-2">
-                                                <i class="bi bi-info-circle-fill me-1"></i>
-                                                {{ __('Select from available hike schedules') }}
-                                            </small>
-                                            @error('hike_id')
-                                                <div class="text-danger small mt-1">{{ $message }}</div>
-                                            @enderror
-                                        </div>
-                                    </div>
                                     @else
-                                    <!-- Pre-selected Hike -->
-                                    <input type="hidden" name="hike_id" value="{{ $hike->id }}">
+                                    <!-- Pre-selected Trek -->
+                                    <input type="hidden" name="booking_type" value="custom">
                                     <div class="row g-4 mb-3">
                                         <div class="col-md-12">
-                                            <label class="form-label">{{ __('Selected Hike') }}</label>
+                                            <label class="form-label">{{ __('Selected Trek') }}</label>
                                             <div class="bg-light p-3 rounded-3">
                                                 <p class="mb-1">
                                                     <i class="bi bi-calendar3 text-primary me-2"></i>
@@ -1021,8 +983,8 @@
                                     </div>
                                     @endif
                                     
-                                    <!-- Custom Booking Fields (Hidden by default) -->
-                                    <div class="row g-4 mb-3" id="custom-booking-section" style="display: none;">
+                                    <!-- Custom Booking Fields -->
+                                    <div class="row g-4 mb-3" id="custom-booking-section">
                                         <div class="col-md-12">
                                             <div class="alert alert-info">
                                                 <i class="bi bi-info-circle me-2"></i>
@@ -1069,7 +1031,7 @@
                                             </select>
                                             <small class="text-muted d-block mt-2">
                                                 <i class="bi bi-info-circle-fill me-1"></i>
-                                                {{ __('Day Hike: 5:30-7:00 AM | Overnight: 10:00 AM-1:00 PM') }}
+                                                {{ __('Day Trek: 5:30-7:00 AM | Overnight: 10:00 AM-1:00 PM') }}
                                             </small>
                                             @error('custom_start_time')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -1134,7 +1096,7 @@
                                             </label>
                                             <select name="start_time" id="start_time" class="form-select" {{ $hike ? 'disabled' : '' }}>
                                                 <option value="">{{ __('Select start time') }}</option>
-                                                <optgroup label="{{ __('Day Hike') }}">
+                                                <optgroup label="{{ __('Day Trek') }}">
                                                     <option value="05:30" {{ old('start_time', $hike ? $hike->start_time->format('H:i') : '') == '05:30' ? 'selected' : '' }}>5:30 AM</option>
                                                     <option value="06:00" {{ old('start_time', $hike ? $hike->start_time->format('H:i') : '') == '06:00' ? 'selected' : '' }}>6:00 AM</option>
                                                     <option value="07:00" {{ old('start_time', $hike ? $hike->start_time->format('H:i') : '') == '07:00' ? 'selected' : '' }}>7:00 AM</option>
@@ -1151,7 +1113,7 @@
                                             @endif
                                             <small class="text-muted d-block mt-2">
                                                 <i class="bi bi-info-circle-fill me-1"></i>
-                                                {{ __('Day Hike: 5:30-7:00 AM | Overnight: 10:00 AM-1:00 PM') }}
+                                                {{ __('Day Trek: 5:30-7:00 AM | Overnight: 10:00 AM-1:00 PM') }}
                                             </small>
                                             @error('start_time')
                                                 <div class="text-danger small mt-1">{{ $message }}</div>
@@ -1167,15 +1129,15 @@
                                                     <i class="bi bi-geo-alt-fill text-primary me-2"></i>
                                                     <strong id="trail-name">{{ $hike ? $hike->trail : 'Sta. Clara Trail (Back-Trail Only)' }}</strong>
                                                 </p>
-                                                <small class="text-muted" id="trail-description">{{ $hike ? 'Selected from hike schedule' : 'Default trail for all bookings' }}</small>
+                                                <small class="text-muted" id="trail-description">{{ $hike ? 'Selected from trek schedule' : 'Default trail for all bookings' }}</small>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 </div>
 
-                                <!-- Guests Section - Only for Custom Bookings -->
-                                <div class="form-section" id="guests-section" style="display: none;">
+                                <!-- Guests Section -->
+                                <div class="form-section" id="guests-section">
                                     <div class="section-header" onclick="toggleAccordion('guests-section')">
                                         <div class="section-icon">
                                             <i class="bi bi-people"></i>
@@ -1283,7 +1245,7 @@
                                                 <input type="radio" class="toggle-input" name="length_of_stay" id="stay_day" value="day_hike" {{ old('length_of_stay', '') === 'day_hike' ? 'checked' : '' }}>
                                                 <label class="toggle-label" for="stay_day">
                                                     <i class="bi bi-sun"></i>
-                                                    {{ __('Day Hike') }}
+                                                    {{ __('Day Trek') }}
                                                 </label>
                                             </div>
                                             <div class="toggle-option">
@@ -1639,7 +1601,7 @@
         const tooltipFields = [
             {
                 selector: 'label[for="emergency_contact_name"]',
-                text: 'Person to contact in case of emergency during the hike'
+                text: 'Person to contact in case of emergency during the trek'
             },
             {
                 selector: 'label[for="medical_conditions"]',
@@ -1820,7 +1782,6 @@
 
     // Booking type toggle functionality
     const bookingTypeRadios = document.querySelectorAll('input[name="booking_type"]');
-    const existingHikeSection = document.getElementById('existing-hike-section');
     const customBookingSection = document.getElementById('custom-booking-section');
     const customTrailSelect = document.getElementById('custom_trail');
     const customTrailInput = document.getElementById('custom-trail-input');
@@ -1829,34 +1790,12 @@
         radio.addEventListener('change', function() {
             const guestsSection = document.getElementById('guests-section');
             
-            if (this.value === 'existing') {
-                // Show existing hike selection, hide custom booking
-                if (existingHikeSection) existingHikeSection.style.display = 'block';
-                if (customBookingSection) customBookingSection.style.display = 'none';
-                
-                // Hide guests section for existing hike bookings
-                if (guestsSection) guestsSection.style.display = 'none';
-                
-                // Make hike selection required
-                const hikeSelect = document.getElementById('hike_id');
-                if (hikeSelect) hikeSelect.setAttribute('required', 'required');
-                
-                // Clear custom booking fields
-                clearCustomBookingFields();
-            } else if (this.value === 'custom') {
-                // Show custom booking, hide existing hike selection
-                if (existingHikeSection) existingHikeSection.style.display = 'none';
+            if (this.value === 'custom') {
+                // Show custom booking
                 if (customBookingSection) customBookingSection.style.display = 'block';
                 
                 // Show guests section for custom bookings
                 if (guestsSection) guestsSection.style.display = 'block';
-                
-                // Remove hike selection requirement
-                const hikeSelect = document.getElementById('hike_id');
-                if (hikeSelect) {
-                    hikeSelect.removeAttribute('required');
-                    hikeSelect.value = '';
-                }
                 
                 // Hide trek details section since we're using custom fields
                 const trekDetails = document.getElementById('trek-details');
@@ -1920,41 +1859,6 @@
         });
     });
 
-    // Hike selection handler
-    const hikeSelect = document.getElementById('hike_id');
-    if (hikeSelect) {
-        hikeSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            if (selectedOption.value) {
-                // Update trek details
-                const trekDate = document.getElementById('trek_date');
-                const startTime = document.getElementById('start_time');
-                const trailName = document.getElementById('trail-name');
-                const trailDescription = document.getElementById('trail-description');
-                
-                if (trekDate) trekDate.value = selectedOption.dataset.date;
-                if (startTime) startTime.value = selectedOption.dataset.time;
-                if (trailName) trailName.textContent = selectedOption.dataset.trail;
-                if (trailDescription) trailDescription.textContent = 'Selected from hike schedule';
-                
-                // Show trek details and trail info sections
-                const trekDetails = document.getElementById('trek-details');
-                const trailInfoSection = document.getElementById('trail-info-section');
-                if (trekDetails) trekDetails.style.display = 'block';
-                if (trailInfoSection) trailInfoSection.style.display = 'block';
-                
-                calculateTotal();
-                updateSubmitState();
-            } else {
-                // Hide sections if no hike selected
-                const trekDetails = document.getElementById('trek-details');
-                const trailInfoSection = document.getElementById('trail-info-section');
-                if (trekDetails) trekDetails.style.display = 'none';
-                if (trailInfoSection) trailInfoSection.style.display = 'none';
-            }
-        });
-    }
-
     // Other inputs
     document.getElementById('local_tourists').addEventListener('input', calculateTotal);
     document.getElementById('foreign_tourists').addEventListener('input', calculateTotal);
@@ -2016,6 +1920,14 @@
 
     // Init
     document.addEventListener('DOMContentLoaded', () => {
+        // Initialize form for custom booking by default
+        const customBookingSection = document.getElementById('custom-booking-section');
+        const guestsSection = document.getElementById('guests-section');
+        
+        // Show custom booking sections by default
+        if (customBookingSection) customBookingSection.style.display = 'block';
+        if (guestsSection) guestsSection.style.display = 'block';
+        
         calculateTotal();
         updateSubmitState();
         

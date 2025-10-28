@@ -1,4 +1,4 @@
- <nav class="admin-navbar">
+<nav class="admin-navbar">
     <div class="admin-nav-container">
         <!-- Admin Brand Section -->
         <div class="admin-nav-brand">
@@ -62,16 +62,7 @@
                     </a>
                 </li>
 
-                <li class="admin-nav-item">
-                    <a href="{{ route('admin.hikes.index') }}" class="admin-nav-link {{ request()->routeIs('admin.hikes.*') ? 'active' : '' }}">
-                        <div class="admin-nav-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M14 6L10.25 11L13.1 14.8L11.5 16C9.81 13.75 7 10 7 10L1 18H23L14 6Z" fill="currentColor"/>
-                            </svg>
-                        </div>
-                        <span class="admin-nav-text">Hikes</span>
-                    </a>
-                </li>
+
 
                 <li class="admin-nav-item">
                     <a href="{{ route('admin.reviews.index') }}" class="admin-nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">
@@ -181,7 +172,6 @@
                 <li><a href="{{ route('admin.dashboard') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">Dashboard</a></li>
                 <li><a href="{{ route('chat.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('chat.*') ? 'active' : '' }}">Messages</a></li>
                 <li><a href="{{ route('admin.bookings.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">Bookings</a></li>
-                <li><a href="{{ route('admin.hikes.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.hikes.*') ? 'active' : '' }}">Hikes</a></li>
                 <li><a href="{{ route('admin.reviews.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.reviews.*') ? 'active' : '' }}">Reviews</a></li>
                 <li><a href="{{ route('admin.manage-user.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.manage-user.*') ? 'active' : '' }}">Users</a></li>
                 <li><a href="{{ route('admin.payments.index') }}" class="admin-mobile-nav-link {{ request()->routeIs('admin.payments.*') ? 'active' : '' }}">Payments</a></li>

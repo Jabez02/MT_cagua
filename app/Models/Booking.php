@@ -13,7 +13,6 @@ class Booking extends Model
 
     protected $fillable = [
         'user_id',
-        'hike_id',
         'trek_date',
         'start_time',
         'trail',
@@ -66,10 +65,7 @@ class Booking extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function hike(): BelongsTo
-    {
-        return $this->belongsTo(Hike::class);
-    }
+
 
     public function guide(): BelongsTo
     {
@@ -104,5 +100,20 @@ class Booking extends Model
     public function payment()
     {
         return $this->hasOne(Payment::class);
+    }
+
+    /**
+     * Convert length_of_stay enum value to numeric days for calculations.
+     * 
+     * @return int
+     */
+    public function getLengthOfStayInDays(): int
+    {
+        return match ($this->length_of_stay) {
+            'day_hike' => 1,
+            'overnight' => 2,
+            'other' => 1, // Default to 1 day for 'other' type
+            default => 1, // Fallback to 1 day
+        };
     }
 }

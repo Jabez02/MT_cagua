@@ -27,9 +27,9 @@
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
-                                <h3 class="fs-5 fw-medium text-body">{{ $review->hike->trail }}</h3>
+                                <h3 class="fs-5 fw-medium text-body">{{ $review->booking->trail }}</h3>
                                 <p class="text-muted small">
-                                    {{ $review->hike->date->format('M d, Y') }} {{ __('at') }} {{ $review->hike->start_time->format('h:i A') }}
+                                    {{ \Carbon\Carbon::parse($review->booking->trek_date)->format('M d, Y') }} {{ __('at') }} {{ \Carbon\Carbon::parse($review->booking->start_time)->format('h:i A') }}
                                 </p>
                             </div>
                             <div class="d-flex gap-2">

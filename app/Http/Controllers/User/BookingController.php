@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
-use App\Models\Hike;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Services\PaymentService;
@@ -18,7 +17,7 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with(['hike', 'guide', 'porter', 'payments'])
+        $query = Booking::with(['guide', 'porter', 'payments'])
             ->where('user_id', auth()->id());
 
         if ($request->has('payment_status')) {
@@ -57,9 +56,10 @@ class BookingController extends Controller
         return view('user.bookings.index', compact('bookings', 'paymentStatusOptions'));
     }
 
-    public function create(Hike $hike = null)
+    public function create()
     {
-        $paymentMethods = PaymentMethod::active()->byPriority()->get();
+        $paymentMethods = PaymentMethod::where('is_active', true)->get();
+        $hike = null; // No hike functionality - always null for custom bookings
         
         return view('user.bookings.create', compact('paymentMethods', 'hike'));
     }
@@ -74,7 +74,6 @@ class BookingController extends Controller
         
         $validated = $request->validate([
             'booking_type' => ['required', 'in:existing,custom'],
-            'hike_id' => ['nullable', 'exists:hikes,id'],
             'trek_date' => $isCustomBooking ? ['nullable'] : ['required', 'date', 'after:today'],
             'start_time' => $isCustomBooking ? ['nullable'] : ['required', 'date_format:H:i'],
             'custom_trek_date' => $isCustomBooking ? ['required', 'date', 'after:today'] : ['nullable', 'date', 'after:today'],
@@ -118,13 +117,37 @@ class BookingController extends Controller
                     ->withErrors(['custom_booking' => 'All custom booking fields (date, time, trail) are required.']);
             }
         } else {
-            // For existing hike bookings, get trail from hike
-            if ($validated['hike_id']) {
-                $hike = \App\Models\Hike::find($validated['hike_id']);
-                $trail = $hike ? $hike->trail : 'Sta. Clara Trail (Back-Trail Only)';
-            } else {
-                $trail = 'Sta. Clara Trail (Back-Trail Only)'; // Default trail
-            }
+            // For all bookings, use default trail
+            $trail = 'Sta. Clara Trail (Back-Trail Only)'; // Default trail
+        }
+
+        // Daily booking limit validation
+        $trekDate = $validated['trek_date'];
+        $existingBookingsCount = Booking::whereDate('trek_date', $trekDate)
+            ->whereNotIn('status', ['cancelled', 'rejected'])
+            ->count();
+        
+        $maxDailyBookings = 10; // Maximum 10 bookings per day
+        
+        if ($existingBookingsCount >= $maxDailyBookings) {
+            return back()
+                ->withInput()
+                ->withErrors(['trek_date' => "Sorry, the maximum number of bookings ({$maxDailyBookings}) for {$trekDate} has been reached. Please select a different date."]);
+        }
+
+        // Check total tourist capacity for the date
+        $existingTouristsCount = Booking::whereDate('trek_date', $trekDate)
+            ->whereNotIn('status', ['cancelled', 'rejected'])
+            ->sum(\DB::raw('local_tourists + foreign_tourists'));
+        
+        $requestedTourists = $validated['local_tourists'] + $validated['foreign_tourists'];
+        $maxDailyTourists = 50; // Maximum 50 tourists per day
+        
+        if (($existingTouristsCount + $requestedTourists) > $maxDailyTourists) {
+            $availableSlots = $maxDailyTourists - $existingTouristsCount;
+            return back()
+                ->withInput()
+                ->withErrors(['tourists' => "Sorry, only {$availableSlots} tourist slots are available for {$trekDate}. You requested {$requestedTourists} tourists. Please reduce the number of tourists or select a different date."]);
         }
 
         // Validate start time based on length of stay
@@ -154,15 +177,7 @@ class BookingController extends Controller
                 ->withErrors(['tourists' => 'You must book for at least one tourist.']);
         }
 
-        // For existing hike bookings, check capacity
-        if ($validated['hike_id']) {
-            $hike = \App\Models\Hike::find($validated['hike_id']);
-            if ($hike && ($hike->current_bookings + $totalTourists) > $hike->capacity) {
-                return back()
-                    ->withInput()
-                    ->withErrors(['capacity' => 'Not enough slots available for this hike. Available slots: ' . ($hike->capacity - $hike->current_bookings)]);
-            }
-        }
+        // No capacity check needed for custom bookings
 
         // Calculate fees based on tourist types
         $localFee = $validated['local_tourists'] * 180; // Residents
@@ -184,10 +199,9 @@ class BookingController extends Controller
 
         $booking = Booking::create([
             'user_id' => Auth::id(),
-            'hike_id' => $validated['hike_id'], // Use the selected hike ID
             'trek_date' => $validated['trek_date'],
             'start_time' => $validated['start_time'],
-            'trail' => $trail, // Use the determined trail (from hike or custom)
+            'trail' => $trail, // Use the determined trail (from custom or default)
             'guide_id' => null, // Will be assigned by admin
             'porter_id' => null, // Will be assigned by admin
             'foreign_tourists' => $validated['foreign_tourists'],
@@ -336,7 +350,7 @@ class BookingController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $booking->load(['hike', 'guide', 'porter', 'payments']);
+        $booking->load(['guide', 'porter', 'payments']);
         return view('user.bookings.show', compact('booking'));
     }
 
@@ -409,10 +423,6 @@ class BookingController extends Controller
                     'cancellation_reason' => request('reason'),
                 ]);
 
-                // Decrease the hike's current bookings count
-                $booking->hike->decrement('current_bookings', 
-                    $booking->foreign_tourists + $booking->local_tourists);
-
                 return redirect()->route('user.bookings.index')
                     ->with('success', 'Booking cancelled and refund initiated successfully. Please allow 3-5 business days for the refund to be processed.');
             }
@@ -423,9 +433,7 @@ class BookingController extends Controller
                 'cancellation_reason' => request('reason'),
             ]);
 
-            // Decrease the hike's current bookings count
-            $booking->hike->decrement('current_bookings', 
-                $booking->foreign_tourists + $booking->local_tourists);
+            // No need to update hike bookings count for custom bookings
 
             return redirect()->route('user.bookings.index')
                 ->with('success', 'Booking cancelled successfully.');

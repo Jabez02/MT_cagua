@@ -15,7 +15,6 @@ class UserProfileController extends Controller
     {
         $user = Auth::user();
         $bookings = Booking::where('user_id', $user->id)
-            ->with('hike')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
         $achievements = Achievement::where('user_id', $user->id)

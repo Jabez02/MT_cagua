@@ -315,7 +315,7 @@
                         <div class="col-md-4">
                             <div class="stats-card">
                                 <div class="stats-number">{{ $porter->total_hikes }}</div>
-                                <div class="stats-label">Total Hikes Completed</div>
+                                <div class="stats-label">Total Treks Completed</div>
                             </div>
                         </div>
                     </div>
@@ -335,7 +335,7 @@
                                 <tr>
                                     <th>Booking ID</th>
                                     <th>Customer</th>
-                                    <th>Hike</th>
+                                    <th>Trail</th>
                                     <th>Date</th>
                                     <th>Status</th>
                                     <th>Actions</th>
@@ -348,7 +348,7 @@
                                             <strong>#{{ $booking->id }}</strong>
                                         </td>
                                         <td>{{ $booking->user->name ?? 'N/A' }}</td>
-                                        <td>{{ $booking->hike->name ?? 'N/A' }}</td>
+                                        <td>{{ $booking->trail ?? 'Custom Booking' }}</td>
                                         <td>{{ $booking->hike_date ? $booking->hike_date->format('M d, Y') : 'N/A' }}</td>
                                         <td>
                                             <span class="badge badge-{{ $booking->status === 'confirmed' ? 'success' : ($booking->status === 'pending' ? 'warning' : 'danger') }}">

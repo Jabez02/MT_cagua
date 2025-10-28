@@ -1232,100 +1232,6 @@
         </div>
     </section>
 
-    <!-- Featured Hikes Section -->
-    <section class="featured-hikes-section py-5" role="region" aria-labelledby="featured-hikes-heading">
-        <div class="container">
-            <div class="row mb-5">
-                <div class="col-12 text-center">
-                    <h2 id="featured-hikes-heading" class="section-title display-5 fw-bold text-dark mb-3">
-                        Featured Hiking Adventures
-                    </h2>
-                    <p class="section-subtitle lead text-muted mb-0">
-                        Discover our most popular trails and breathtaking destinations
-                    </p>
-                </div>
-            </div>
-            <div class="row g-4">
-                @forelse($featuredHikes ?? [] as $hike)
-                    <div class="col-lg-4 col-md-6">
-                        <article class="hike-card card h-100 border-0 shadow-sm hover-lift" tabindex="0">
-                            @if($hike->images && $hike->images->isNotEmpty())
-                                <div class="hike-image-container position-relative overflow-hidden">
-                                    <img src="{{ Storage::url($hike->images->first()->image_path) }}" 
-                                         class="card-img-top hike-image" 
-                                         alt="{{ $hike->name }} hiking trail"
-                                         loading="lazy">
-                                    <div class="hike-difficulty-badge position-absolute top-0 end-0 m-3">
-                                        <span class="badge bg-{{ $hike->difficulty === 'easy' ? 'success' : ($hike->difficulty === 'moderate' ? 'warning' : 'danger') }} px-3 py-2">
-                                            {{ ucfirst($hike->difficulty) }}
-                                        </span>
-                                    </div>
-                                </div>
-                            @else
-                                <div class="hike-image-container position-relative overflow-hidden">
-                                    <img src="{{ $hike->image_url ?? asset('images/placeholder-mountain.svg') }}" 
-                                         class="card-img-top hike-image" 
-                                         alt="{{ $hike->name }} hiking trail"
-                                         loading="lazy">
-                                    <div class="hike-difficulty-badge position-absolute top-0 end-0 m-3">
-                                        <span class="badge bg-{{ $hike->difficulty === 'easy' ? 'success' : ($hike->difficulty === 'moderate' ? 'warning' : 'danger') }} px-3 py-2">
-                                            {{ ucfirst($hike->difficulty) }}
-                                        </span>
-                                    </div>
-                                </div>
-                            @endif
-                            <div class="card-body p-4">
-                                <h3 class="hike-title card-title h5 fw-semibold mb-3">
-                                    <a href="{{ route('hikes.show', $hike) }}" class="text-decoration-none text-dark stretched-link"
-                                       aria-label="View details for {{ $hike->name }}">
-                                        {{ $hike->name }}
-                                    </a>
-                                </h3>
-                                <p class="text-muted small mb-3">
-                                    <i class="bi bi-geo-alt me-1"></i> {{ $hike->location }}
-                                    <span class="mx-2">•</span>
-                                    <i class="bi bi-clock me-1"></i> {{ $hike->duration }} hours
-                                </p>
-                                <p class="hike-description card-text text-muted mb-3">
-                                    {{ Str::limit($hike->description, 120) }}
-                                </p>
-                                <div class="hike-meta d-flex justify-content-between align-items-center">
-                                    <div class="hike-price fw-semibold text-primary">
-                                        ₱{{ number_format($hike->price, 2) }}
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    </div>
-                @empty
-                    <div class="col-12">
-                        <div class="text-center py-5">
-                            <div class="empty-state-icon mb-3" aria-hidden="true">
-                                <i class="bi bi-mountain text-muted" style="font-size: 3rem;"></i>
-                            </div>
-                            <h3 class="h5 text-muted mb-2">No Featured Hikes Available</h3>
-                            <p class="text-muted mb-4">Check back soon for exciting hiking adventures!</p>
-                            <a href="{{ route('hikes.index') }}" class="btn btn-outline-primary">
-                                Browse All Hikes
-                            </a>
-                        </div>
-                    </div>
-                @endforelse
-            </div>
-            @if(($featuredHikes ?? collect())->isNotEmpty())
-                <div class="row mt-5">
-                    <div class="col-12 text-center">
-                        <a href="{{ route('hikes.index') }}" class="btn btn-primary btn-lg px-5 py-3"
-                           aria-label="View all available hiking tours">
-                            <i class="bi bi-arrow-right me-2" aria-hidden="true"></i>
-                            <span>View All Hikes</span>
-                        </a>
-                    </div>
-                </div>
-            @endif
-        </div>
-    </section>
-
     <!-- Testimonials Section -->
     <section class="testimonials-section py-5 bg-light" role="region" aria-labelledby="testimonials-heading">
         <div class="container">
@@ -1404,12 +1310,7 @@
                         Book your unforgettable hiking experience today and create memories that will last a lifetime.
                     </p>
                     <div class="cta-actions d-flex flex-wrap justify-content-center gap-3" role="group" aria-labelledby="cta-heading">
-                        <a href="{{ route('hikes.index') }}" class="btn btn-light btn-lg px-5 py-3 cta-primary"
-                           aria-label="Book your hiking adventure now">
-                            <i class="bi bi-calendar-plus me-2" aria-hidden="true"></i>
-                            <span>Book Your Adventure</span>
-                        </a>
-                        <a href="{{ route('contact') }}" class="btn btn-outline-light btn-lg px-5 py-3 cta-secondary"
+                        <a href="{{ route('contact') }}" class="btn btn-light btn-lg px-5 py-3 cta-primary"
                            aria-label="Contact us for more information">
                             <i class="bi bi-telephone me-2" aria-hidden="true"></i>
                             <span>Contact Us</span>

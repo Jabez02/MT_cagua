@@ -99,7 +99,7 @@ class PaymentController extends Controller
      */
     public function show(Payment $payment)
     {
-        $payment->load(['booking.user', 'booking.hike']);
+        $payment->load(['booking.user']);
         
         // Generate audit trail data for inline display
         $auditTrail = [
@@ -342,7 +342,7 @@ class PaymentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $payments = Payment::with(['booking.user', 'booking.hike'])
+        $payments = Payment::with(['booking.user'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -352,7 +352,7 @@ class PaymentController extends Controller
             'Booking ID',
             'User Name',
             'User Email',
-            'Hike Name',
+            'Trail',
             'Amount',
             'Payment Method',
             'Transaction ID',
@@ -371,7 +371,7 @@ class PaymentController extends Controller
                 $payment->booking_id,
                 $payment->booking->user->name ?? 'N/A',
                 $payment->booking->user->email ?? 'N/A',
-                $payment->booking->hike->name ?? 'N/A',
+                $payment->booking->trail ?? 'N/A',
                 number_format($payment->amount, 2),
                 ucfirst(str_replace('_', ' ', $payment->payment_method)),
                 $payment->transaction_id ?? 'N/A',

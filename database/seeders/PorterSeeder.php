@@ -22,7 +22,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay San Miguel, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 25,
-                'total_hikes' => 38,
+                'total_treks' => 38,
             ],
             [
                 'name' => 'Benjamin "Ben" Castro',
@@ -30,7 +30,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Centro, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 30,
-                'total_hikes' => 42,
+                'total_treks' => 42,
             ],
             [
                 'name' => 'Carlos "Charlie" Morales',
@@ -38,7 +38,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Pallua Norte, Tuguegarao City, Cagayan',
                 'status' => 'assigned',
                 'max_weight_capacity' => 35,
-                'total_hikes' => 56,
+                'total_treks' => 56,
             ],
             [
                 'name' => 'Daniel "Danny" Rivera',
@@ -46,7 +46,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Caritan Norte, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 28,
-                'total_hikes' => 31,
+                'total_treks' => 31,
             ],
             [
                 'name' => 'Emmanuel "Manny" Gonzales',
@@ -54,7 +54,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Ugac Norte, Tuguegarao City, Cagayan',
                 'status' => 'unavailable',
                 'max_weight_capacity' => 32,
-                'total_hikes' => 47,
+                'total_treks' => 47,
             ],
             [
                 'name' => 'Fernando "Ferdie" Lopez',
@@ -62,7 +62,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Atulayan Norte, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 26,
-                'total_hikes' => 23,
+                'total_treks' => 23,
             ],
             [
                 'name' => 'Gabriel "Gab" Hernandez',
@@ -70,7 +70,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Carig, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 40,
-                'total_hikes' => 61,
+                'total_treks' => 61,
             ],
             [
                 'name' => 'Hector "Hecky" Perez',
@@ -78,7 +78,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Pengue-Ruyu, Tuguegarao City, Cagayan',
                 'status' => 'assigned',
                 'max_weight_capacity' => 29,
-                'total_hikes' => 35,
+                'total_treks' => 35,
             ],
             [
                 'name' => 'Ignacio "Iggy" Valdez',
@@ -86,7 +86,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Tanza, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 33,
-                'total_hikes' => 44,
+                'total_treks' => 44,
             ],
             [
                 'name' => 'Jose "Joey" Mendoza',
@@ -94,7 +94,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Buntun, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 27,
-                'total_hikes' => 29,
+                'total_treks' => 29,
             ],
             [
                 'name' => 'Leonardo "Leo" Santos',
@@ -102,7 +102,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Larion Alto, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 31,
-                'total_hikes' => 39,
+                'total_treks' => 39,
             ],
             [
                 'name' => 'Manuel "Manny" Cruz',
@@ -110,7 +110,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Namabbalan Norte, Tuguegarao City, Cagayan',
                 'status' => 'unavailable',
                 'max_weight_capacity' => 24,
-                'total_hikes' => 18,
+                'total_treks' => 18,
             ],
             [
                 'name' => 'Nicolas "Nick" Reyes',
@@ -118,7 +118,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Gosi Norte, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 36,
-                'total_hikes' => 52,
+                'total_treks' => 52,
             ],
             [
                 'name' => 'Oscar "Oskie" Torres',
@@ -126,7 +126,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Dadda, Tuguegarao City, Cagayan',
                 'status' => 'available',
                 'max_weight_capacity' => 38,
-                'total_hikes' => 48,
+                'total_treks' => 48,
             ],
             [
                 'name' => 'Pedro "Pete" Flores',
@@ -134,7 +134,7 @@ class PorterSeeder extends Seeder
                 'address' => 'Barangay Cataggaman Nuevo, Tuguegarao City, Cagayan',
                 'status' => 'assigned',
                 'max_weight_capacity' => 34,
-                'total_hikes' => 41,
+                'total_treks' => 41,
             ],
         ];
 

@@ -487,7 +487,7 @@
                     <div class="empty-state">
                         <i class="bi bi-star" aria-hidden="true"></i>
                         <h3>{{ __('No Reviews Yet') }}</h3>
-                        <p>{{ __('You haven\'t written any reviews yet. Complete a hike first, then you can write a review from your bookings page.') }}</p>
+                        <p>{{ __('You haven\'t written any reviews yet. Complete a trek first, then you can write a review from your bookings page.') }}</p>
                         <a href="{{ route('user.bookings.index') }}" 
                            class="btn-new-review"
                            role="button"
@@ -502,10 +502,10 @@
                             <article class="review-card" role="article">
                                 <div class="review-header">
                                     <div class="flex-grow-1">
-                                        <h2 class="review-trail">{{ $review->hike->trail }}</h2>
-                                        <p class="review-date">
-                                            {{ $review->hike->date->format('M d, Y') }} {{ __('at') }} {{ $review->hike->start_time->format('h:i A') }}
-                                        </p>
+                                        <h2 class="review-trail">{{ $review->booking->trail }}</h2>
+                    <p class="review-date">
+                        {{ \Carbon\Carbon::parse($review->booking->trek_date)->format('M d, Y') }} {{ __('at') }} {{ \Carbon\Carbon::parse($review->booking->start_time)->format('h:i A') }}
+                    </p>
                                     </div>
                                     <div class="review-badges">
                                         @if($review->is_verified)
@@ -548,7 +548,7 @@
                                     <a href="{{ route('user.reviews.show', $review) }}" 
                                        class="action-btn btn-view"
                                        role="button"
-                                       aria-label="{{ __('View full review for :trail', ['trail' => $review->hike->trail]) }}">
+                                       aria-label="{{ __('View full review for :trail', ['trail' => $review->booking->trail]) }}">
                                         <i class="bi bi-eye" aria-hidden="true"></i>
                                         {{ __('View') }}
                                     </a>
@@ -557,7 +557,7 @@
                                         <a href="{{ route('user.reviews.edit', $review) }}" 
                                            class="action-btn btn-edit"
                                            role="button"
-                                           aria-label="{{ __('Edit review for :trail', ['trail' => $review->hike->trail]) }}">
+                                           aria-label="{{ __('Edit review for :trail', ['trail' => $review->booking->trail]) }}">
                                             <i class="bi bi-pencil" aria-hidden="true"></i>
                                             {{ __('Edit') }}
                                         </a>
@@ -570,7 +570,7 @@
                                             @method('DELETE')
                                             <button type="submit" 
                                                     class="action-btn btn-delete"
-                                                    aria-label="{{ __('Delete review for :trail', ['trail' => $review->hike->trail]) }}">
+                                                    aria-label="{{ __('Delete review for :trail', ['trail' => $review->booking->trail]) }}">
                                                 <i class="bi bi-trash" aria-hidden="true"></i>
                                                 {{ __('Delete') }}
                                             </button>

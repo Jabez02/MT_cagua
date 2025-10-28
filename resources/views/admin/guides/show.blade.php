@@ -307,7 +307,7 @@
                         </div>
 
                         <div class="info-item">
-                            <div class="info-label">Total Hikes</div>
+                            <div class="info-label">Total Treks</div>
                             <div class="info-value">
                                 <span class="badge badge-info">{{ $guide->total_hikes }}</span>
                             </div>
@@ -361,7 +361,7 @@
                             <thead>
                                 <tr>
                                     <th>Booking ID</th>
-                                    <th>Hike</th>
+                                    <th>Trail</th>
                                     <th>Customer</th>
                                     <th>Date</th>
                                     <th>Status</th>
@@ -375,14 +375,9 @@
                                             <strong>#{{ $booking->id }}</strong>
                                         </td>
                                         <td>
-                                            @if($booking->hike)
-                                                <div>
-                                                    <strong>{{ $booking->hike->title }}</strong>
-                                                    <div class="text-secondary small">{{ $booking->hike->location }}</div>
-                                                </div>
-                                            @else
-                                                <span class="text-secondary">Hike not found</span>
-                                            @endif
+                                            <div>
+                                                <strong>{{ $booking->trail ?? 'Custom Booking' }}</strong>
+                                            </div>
                                         </td>
                                         <td>
                                             @if($booking->user)

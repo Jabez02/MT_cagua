@@ -484,7 +484,7 @@
                                 <th>Booking ID</th>
                                 <th>User</th>
                                 <th>Type</th>
-                                <th>Hike/Trail</th>
+                                <th>Trail</th>
                                 <th>Date</th>
                                 <th>Participants</th>
                                 <th>Total Amount</th>
@@ -498,18 +498,12 @@
                                 <td><strong>{{ $booking->id }}</strong></td>
                                 <td>{{ $booking->user->name }}</td>
                                 <td>
-                                    @if($booking->hike_id === null)
-                                        <span class="badge bg-warning text-dark">
-                                            <i class="bi bi-star-fill me-1"></i>Custom
-                                        </span>
-                                    @else
-                                        <span class="badge bg-primary">
-                                            <i class="bi bi-calendar-event me-1"></i>Regular
-                                        </span>
-                                    @endif
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="bi bi-star-fill me-1"></i>Custom
+                                    </span>
                                 </td>
-                                <td>{{ $booking->hike ? $booking->hike->name : ($booking->trail ?? 'Custom Booking') }}</td>
-                                <td>{{ $booking->hike ? $booking->hike->date->format('M d, Y') : ($booking->trek_date ? \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') : 'Not specified') }}</td>
+                                <td>{{ $booking->trail ?? 'Custom Booking' }}</td>
+                                <td>{{ $booking->trek_date ? \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') : 'Not specified' }}</td>
                                 <td>{{ $booking->foreign_tourists + $booking->local_tourists }}</td>
                                 <td><strong>₱{{ number_format($booking->total_amount, 2) }}</strong></td>
                                 <td>

@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('hike_id')->constrained()->onDelete('cascade');
             $table->integer('foreign_tourists')->default(0);
             $table->integer('local_tourists')->default(0);
-            $table->enum('length_of_stay', ['day_hike', 'overnight'])->default('day_hike');
+            $table->enum('length_of_stay', ['day_trek', 'overnight'])->default('day_trek');
             $table->enum('transportation', ['own_vehicle', 'rent_trike'])->default('own_vehicle');
             $table->json('health_issues')->nullable();
             $table->decimal('tourist_fee', 10, 2);

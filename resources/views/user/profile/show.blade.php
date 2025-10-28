@@ -177,13 +177,13 @@
         word-break: break-word;
     }
 
-    .hike-history-table {
+    .trek-history-table {
         width: 100%;
         border-collapse: collapse;
         margin: 0;
     }
 
-    .hike-history-table th {
+    .trek-history-table th {
         background: rgba(248, 250, 252, 0.8);
         padding: 1rem;
         text-align: left;
@@ -195,14 +195,14 @@
         border-bottom: 2px solid var(--border-color);
     }
 
-    .hike-history-table td {
+    .trek-history-table td {
         padding: 1rem;
         border-bottom: 1px solid var(--border-color);
         color: var(--text-primary);
         vertical-align: middle;
     }
 
-    .hike-history-table tr:hover {
+    .trek-history-table tr:hover {
         background: rgba(248, 250, 252, 0.5);
     }
 
@@ -456,12 +456,12 @@
             padding: 1.5rem;
         }
         
-        .hike-history-table {
+        .trek-history-table {
             font-size: 0.875rem;
         }
         
-        .hike-history-table th,
-        .hike-history-table td {
+        .trek-history-table th,
+        .trek-history-table td {
             padding: 0.75rem 0.5rem;
         }
         
@@ -499,8 +499,8 @@
             padding: 1rem;
         }
         
-        .hike-history-table th,
-        .hike-history-table td {
+        .trek-history-table th,
+        .trek-history-table td {
             padding: 0.5rem 0.25rem;
             font-size: 0.75rem;
         }
@@ -617,20 +617,20 @@
                 </div>
             </div>
 
-            <!-- Hike History -->
+            <!-- Trek History -->
             <div class="profile-card">
                 <header class="card-header">
                     <div>
                         <h2 class="card-title">
                             <i class="bi bi-clock-history" aria-hidden="true"></i>
-                            {{ __('Hike History') }}
+                            {{ __('Trek History') }}
                         </h2>
-                        <p class="card-subtitle">{{ __('Your past and upcoming hiking adventures') }}</p>
+                        <p class="card-subtitle">{{ __('Your past and upcoming trekking adventures') }}</p>
                     </div>
                 </header>
                 @if($bookings->count() > 0)
                     <div class="table-responsive">
-                        <table class="hike-history-table" role="table">
+                        <table class="trek-history-table" role="table">
                             <thead>
                                 <tr>
                                     <th scope="col">{{ __('Date') }}</th>
@@ -642,8 +642,8 @@
                             <tbody>
                                 @foreach($bookings as $booking)
                                     <tr>
-                                        <td>{{ $booking->hike->date instanceof \Carbon\Carbon ? $booking->hike->date->format('M d, Y') : $booking->hike->date }}</td>
-                                        <td>{{ $booking->hike->trail }}</td>
+                                        <td>{{ $booking->trek_date ? $booking->trek_date->format('M d, Y') : 'Date not set' }}</td>
+                                        <td>{{ $booking->trail ?? 'Custom Booking' }}</td>
                                         <td>
                                             @php
                                                 $status = strtolower($booking->status);
@@ -669,7 +669,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('user.bookings.show', $booking) }}" class="btn-view" role="button" aria-label="{{ __('View details for :trail hike', ['trail' => $booking->hike->trail]) }}">
+                                            <a href="{{ route('user.bookings.show', $booking) }}" class="btn-view" role="button" aria-label="{{ __('View details for :trail trek', ['trail' => $booking->trail ?? 'Custom Booking']) }}">>
                                                 <i class="bi bi-eye" aria-hidden="true"></i>
                                                 {{ __('View Details') }}
                                             </a>
@@ -685,10 +685,10 @@
                         </div>
                     @endif
                 @else
-                    <div class="empty-state" role="region" aria-label="{{ __('No hike history') }}">
+                    <div class="empty-state" role="region" aria-label="{{ __('No trek history') }}">
                         <i class="bi bi-calendar-x" aria-hidden="true"></i>
-                        <div class="empty-state-title">{{ __('No Hike History') }}</div>
-                        <div class="empty-state-text">{{ __('You haven\'t booked any hikes yet. Start exploring our trails to build your hiking history!') }}</div>
+                        <div class="empty-state-title">{{ __('No Trek History') }}</div>
+                        <div class="empty-state-text">{{ __('You haven\'t booked any treks yet. Start exploring our trails to build your trekking history!') }}</div>
                     </div>
                 @endif
             </div>
@@ -724,7 +724,7 @@
                     <div class="empty-state" role="region" aria-label="{{ __('No achievements') }}">
                         <i class="bi bi-award" aria-hidden="true"></i>
                         <div class="empty-state-title">{{ __('No Achievements Yet') }}</div>
-                        <div class="empty-state-text">{{ __('Complete hikes and reach milestones to earn badges and achievements. Your journey starts with your first hike!') }}</div>
+                        <div class="empty-state-text">{{ __('Complete treks and reach milestones to earn badges and achievements. Your journey starts with your first trek!') }}</div>
                     </div>
                 @endif
             </div>
