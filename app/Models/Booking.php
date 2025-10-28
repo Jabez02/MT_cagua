@@ -102,6 +102,11 @@ class Booking extends Model
         return $this->hasOne(Payment::class);
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class);
+    }
+
     /**
      * Convert length_of_stay enum value to numeric days for calculations.
      * 

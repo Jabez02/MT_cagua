@@ -54,14 +54,27 @@ class ReviewController extends Controller
     {
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'comment' => ['required', 'string', 'min:10', 'max:1000'],
+            'comment' => ['required', 'string', 'max:1000'],
+            'images' => ['nullable', 'array', 'max:5'],
+            'images.*' => ['image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'],
         ]);
+
+        $imagePaths = [];
+        
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('reviews', 'public');
+                $imagePaths[] = $path;
+            }
+        }
 
         $review = Review::create([
             'user_id' => Auth::id(),
             'booking_id' => $booking->id,
             'rating' => $validated['rating'],
             'comment' => $validated['comment'],
+            'images' => $imagePaths,
             'is_verified' => false,
             'is_public' => true,
         ]);
@@ -116,7 +129,7 @@ class ReviewController extends Controller
 
         $validated = $request->validate([
             'rating' => ['required', 'integer', 'min:1', 'max:5'],
-            'comment' => ['required', 'string', 'min:10', 'max:1000'],
+            'comment' => ['required', 'string', 'max:1000'],
         ]);
 
         $review->update([

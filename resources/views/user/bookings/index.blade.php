@@ -562,7 +562,7 @@
                                                  <i class="bi bi-x-circle me-1" aria-hidden="true"></i>Cancelled
                                              </span>
                                          @else
-                                             <span class="status-badge status-unknown" role="status" aria-label="Booking status: {{ ucfirst($booking->status) }}">
+                                             <span class="status-badge status-unknown" role="status" aria-label="Booking status: {{ e(ucfirst($booking->status)) }}">
                                                  <i class="bi bi-question-circle me-1" aria-hidden="true"></i>{{ ucfirst($booking->status) }}
                                              </span>
                                          @endif
@@ -605,18 +605,18 @@
                                             <a href="{{ route('user.bookings.show', $booking) }}" 
                                                class="action-btn btn-view text-decoration-none text-center"
                                                role="button"
-                                               aria-label="View details for {{ $booking->trail ?? 'Custom' }} booking">
+                                               aria-label="View details for {{ e($booking->trail ?? 'Custom') }} booking">
                                                 <i class="bi bi-eye me-1" aria-hidden="true"></i>View Details
                                             </a>
                                             @if($booking->status === 'completed')
                                                 @php
-                                                    $hasReviewed = $booking->user->reviews()->where('booking_id', $booking->id)->exists();
+                                                    $hasReviewed = $booking->reviews()->where('user_id', Auth::id())->exists();
                                                 @endphp
                                                 @if(!$hasReviewed)
                                                     <a href="{{ route('user.reviews.create', $booking) }}"
                                                        class="action-btn btn-review text-decoration-none text-center"
                                                        role="button"
-                                                       aria-label="Write review for {{ $booking->trail }}">
+                                                       aria-label="Write review for {{ e($booking->trail) }}">
                                                         <i class="bi bi-star me-1" aria-hidden="true"></i>Write Review
                                                     </a>
                                                 @else
@@ -629,7 +629,7 @@
                                                 <button type="button" 
                                                         class="action-btn btn-cancel"
                                                         onclick="showCancelModal('{{ $booking->id }}')"
-                                                        aria-label="Cancel booking for {{ $booking->trail ?? 'Custom' }}">
+                                                        aria-label="Cancel booking for {{ e($booking->trail ?? 'Custom') }}">
                                                     <i class="bi bi-x-lg me-1" aria-hidden="true"></i>Cancel Booking
                                                 </button>
                                             @endif

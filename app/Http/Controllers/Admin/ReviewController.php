@@ -15,7 +15,7 @@ class ReviewController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Review::with(['user', 'moderator']);
+        $query = Review::with(['user', 'moderator', 'booking']);
 
         // Apply filters
         switch ($request->filter) {
@@ -40,7 +40,7 @@ class ReviewController extends Controller
      */
     public function show(Review $review)
     {
-        $review->load(['user', 'moderator']);
+        $review->load(['user', 'moderator', 'booking']);
         return view('admin.reviews.show', compact('review'));
     }
 
@@ -85,6 +85,27 @@ class ReviewController extends Controller
         ]);
 
         return back()->with('success', 'Review has been made public.');
+    }
+
+    /**
+     * Reject a review.
+     */
+    public function reject(Request $request, Review $review)
+    {
+        $request->validate([
+            'rejection_reason' => 'required|string|max:500'
+        ]);
+
+        $review->update([
+            'status' => 'rejected',
+            'is_verified' => false,
+            'is_public' => false,
+            'rejection_reason' => $request->rejection_reason,
+            'moderated_by' => Auth::id(),
+            'moderated_at' => Carbon::now(),
+        ]);
+
+        return back()->with('success', 'Review has been rejected.');
     }
 
     /**

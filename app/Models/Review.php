@@ -20,7 +20,11 @@ class Review extends Model
         'booking_id',
         'rating',
         'comment',
+        'images',
         'status',
+        'is_verified',
+        'is_public',
+        'rejection_reason',
         'moderated_by',
         'moderated_at'
     ];
@@ -33,6 +37,7 @@ class Review extends Model
     protected $casts = [
         'is_verified' => 'boolean',
         'is_public' => 'boolean',
+        'images' => 'array',
         'moderated_at' => 'datetime',
     ];
 

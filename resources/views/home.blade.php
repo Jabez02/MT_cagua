@@ -1249,30 +1249,39 @@
                 @forelse($testimonials ?? [] as $testimonial)
                     <div class="col-lg-4 col-md-6">
                         <article class="testimonial-card card h-100 border-0 shadow-sm" tabindex="0">
+                            @if($testimonial->images && count($testimonial->images) > 0)
+                                <div class="testimonial-image">
+                                    <img src="{{ asset('storage/' . $testimonial->images[0]) }}" 
+                                         alt="Review image by {{ $testimonial->user->name }}" 
+                                         class="card-img-top" 
+                                         style="height: 200px; object-fit: cover;"
+                                         loading="lazy">
+                                </div>
+                            @endif
                             <div class="card-body p-4">
-                                <div class="testimonial-rating mb-3" aria-label="Rating: {{ $testimonial->rating ?? 5 }} out of 5 stars">
+                                <div class="testimonial-rating mb-3" aria-label="Rating: {{ $testimonial->rating }} out of 5 stars">
                                     @for($i = 1; $i <= 5; $i++)
-                                        <i class="bi bi-star{{ $i <= ($testimonial->rating ?? 5) ? '-fill' : '' }} text-warning" aria-hidden="true"></i>
+                                        <i class="fas fa-star{{ $i <= $testimonial->rating ? '' : '-o' }} text-warning" aria-hidden="true"></i>
                                     @endfor
-                                    <span class="visually-hidden">{{ $testimonial->rating ?? 5 }} out of 5 stars</span>
+                                    <span class="visually-hidden">{{ $testimonial->rating }} out of 5 stars</span>
                                 </div>
                                 <blockquote class="testimonial-content mb-4">
                                     <p class="text-muted mb-0 fst-italic">
-                                        "{{ $testimonial->content ?? 'Amazing experience! The guides were very knowledgeable and the views were breathtaking. Highly recommended!' }}"
+                                        "{{ Str::limit($testimonial->comment, 150) }}"
                                     </p>
                                 </blockquote>
                                 <footer class="testimonial-author d-flex align-items-center">
                                     <div class="author-avatar bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center me-3" aria-hidden="true">
                                         <span class="text-white fw-semibold">
-                                            {{ strtoupper(substr($testimonial->user->name ?? 'John Doe', 0, 1)) }}
+                                            {{ strtoupper(substr($testimonial->user->name, 0, 1)) }}
                                         </span>
                                     </div>
                                     <div>
                                         <cite class="author-name fw-semibold text-dark d-block">
-                                            {{ $testimonial->user->name ?? 'John Doe' }}
+                                            {{ $testimonial->user->name }}
                                         </cite>
                                         <small class="author-location text-muted">
-                                            {{ $testimonial->created_at?->diffForHumans() ?? '2 days ago' }}
+                                            {{ $testimonial->created_at->diffForHumans() }}
                                         </small>
                                     </div>
                                 </footer>

@@ -521,7 +521,7 @@
                                         <strong>{{ $review->user->name }}</strong>
                                     </div>
                                 </td>
-                                <td><strong>{{ $review->hike->name }}</strong></td>
+                                <td><strong>{{ $review->booking->trail ?? 'N/A' }}</strong></td>
                                 <td>
                                     <div class="rating-stars">
                                         @for($i = 1; $i <= 5; $i++)
@@ -552,7 +552,7 @@
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         @if(!$review->is_verified && $review->status !== 'rejected')
-                                        <form action="{{ route('admin.reviews.approve', $review->id) }}" method="POST" class="d-inline approve-form">
+                                        <form action="{{ route('admin.reviews.verify', $review->id) }}" method="POST" class="d-inline approve-form">
                                             @csrf
                                             @method('PATCH')
                                             <button type="submit" class="btn btn-sm btn-outline-success" title="Approve Review">

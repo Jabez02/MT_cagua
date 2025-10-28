@@ -68,8 +68,8 @@ Route::middleware(['auth', 'verified', 'userMiddleware'])->group(function () {
 
         // Review Routes
         Route::get('/reviews', [ReviewController::class, 'index'])->name('user.reviews.index');
-        Route::get('/reviews/create', [ReviewController::class, 'create'])->name('user.reviews.create');
-        Route::post('/reviews', [ReviewController::class, 'store'])->name('user.reviews.store');
+        Route::get('/reviews/create/{booking}', [ReviewController::class, 'create'])->name('user.reviews.create');
+        Route::post('/reviews/{booking}', [ReviewController::class, 'store'])->name('user.reviews.store');
         Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('user.reviews.show');
         Route::get('/reviews/{review}/edit', [ReviewController::class, 'edit'])->name('user.reviews.edit');
         Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('user.reviews.update');
@@ -137,7 +137,8 @@ Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->name('admin.')-
         // Review Management Routes
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::get('/reviews/{review}', [AdminReviewController::class, 'show'])->name('reviews.show');
-        Route::post('/reviews/{review}/verify', [AdminReviewController::class, 'verify'])->name('reviews.verify');
+        Route::patch('/reviews/{review}/verify', [AdminReviewController::class, 'verify'])->name('reviews.verify');
+        Route::patch('/reviews/{review}/reject', [AdminReviewController::class, 'reject'])->name('reviews.reject');
         Route::post('/reviews/{review}/hide', [AdminReviewController::class, 'hide'])->name('reviews.hide');
         Route::post('/reviews/{review}/publish', [AdminReviewController::class, 'publish'])->name('reviews.publish');
         Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
