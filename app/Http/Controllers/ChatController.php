@@ -152,15 +152,26 @@ class ChatController extends Controller
 
         // Create the message
         $message = Message::create([
+            'user_id' => $user->id, // maintain compatibility with legacy schema
             'conversation_id' => $conversationId,
-            'sender_type' => User::class,
+            'sender_type' => ($user->usertype === 'admin') ? 'admin' : 'user',
             'sender_id' => $user->id,
-            'content' => $request->content ?? '',
+            'message' => $request->content ?? '',
             'message_type' => $messageType,
-            'attachment' => $attachmentPath,
             'reply_to_message_id' => $request->reply_to_message_id,
             'delivery_status' => 'sent'
         ]);
+
+        // Persist attachment record if present
+        if ($attachmentPath) {
+            $message->attachments()->create([
+                'original_name' => $file->getClientOriginalName(),
+                'file_name' => basename($attachmentPath),
+                'file_path' => $attachmentPath,
+                'mime_type' => $file->getMimeType(),
+                'file_size' => $file->getSize(),
+            ]);
+        }
 
         // Update conversation's last message timestamp
         $conversation->update([
@@ -168,10 +179,9 @@ class ChatController extends Controller
         ]);
 
         // Load relationships for response
-        $message->load(['sender', 'replyToMessage.sender']);
+        $message->load(['sender', 'replyToMessage.sender', 'attachments']);
 
-        // Broadcast the message
-        broadcast(new MessageSent($message))->toOthers();
+        // No broadcasting in polling-only mode
 
         return response()->json([
             'message' => $message,
@@ -184,13 +194,25 @@ class ChatController extends Controller
      */
     public function startConversation(Request $request): JsonResponse
     {
-        $request->validate([
-            'recipient_id' => 'required|exists:users,id'
-        ]);
+        try {
+            $user = Auth::user();
 
-        $user = Auth::user();
-        $recipientId = $request->recipient_id;
-        $recipient = User::findOrFail($recipientId);
+        // For admins, recipient is required (a user). For customers, pick an available admin if not provided.
+        if ($user->usertype === 'admin') {
+            $request->validate([
+                'recipient_id' => 'required|exists:users,id'
+            ]);
+            $recipientId = $request->recipient_id;
+            $recipient = User::findOrFail($recipientId);
+        } else {
+            $recipientId = $request->input('recipient_id');
+            if (!$recipientId) {
+                $recipient = User::where('usertype', 'admin')->firstOrFail();
+                $recipientId = $recipient->id;
+            } else {
+                $recipient = User::findOrFail($recipientId);
+            }
+        }
 
         // Check if conversation already exists
         $conversation = Conversation::where(function ($query) use ($user, $recipient) {
@@ -208,15 +230,38 @@ class ChatController extends Controller
                 'status' => 'active',
                 'user_id' => $user->usertype === 'admin' ? $recipient->id : $user->id,
                 'admin_id' => $user->usertype === 'admin' ? $user->id : $recipient->id,
-                'participants' => [$user->id, $recipient->id]
+                'participants' => [$user->id, $recipient->id],
+                'last_message_at' => now()
             ]);
+
+            // If an initial message was provided, create it.
+            if ($request->filled('content')) {
+                $message = Message::create([
+                    'user_id' => $user->id,
+                    'conversation_id' => $conversation->id,
+                    'sender_type' => ($user->usertype === 'admin') ? 'admin' : 'user',
+                    'sender_id' => $user->id,
+                    'message' => $request->input('content'),
+                    'message_type' => 'text',
+                    'delivery_status' => 'sent'
+                ]);
+                $message->load(['sender']);
+            }
         }
 
-        $conversation->load(['user', 'admin', 'latestMessage']);
+            $conversation->load(['user', 'admin', 'latestMessage']);
 
-        return response()->json([
-            'conversation' => $conversation
-        ]);
+            return response()->json([
+                'conversation' => $conversation
+            ]);
+        } catch (\Throwable $e) {
+            \Log::error('Failed to start conversation', [
+                'user_id' => Auth::id(),
+                'request' => $request->all(),
+                'error' => $e->getMessage(),
+            ]);
+            return response()->json(['error' => 'Failed to start conversation'], 500);
+        }
     }
 
     /**
@@ -272,7 +317,7 @@ class ChatController extends Controller
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $message->addReaction($user->id, $request->emoji);
+        $message->addReaction($request->emoji, $user->id);
 
         return response()->json([
             'message' => $message->fresh(),
@@ -295,15 +340,15 @@ class ChatController extends Controller
         // Verify user has access to this message's conversation
         $conversation = $message->conversation;
         
-        if ($user->role === 'admin' && $conversation->admin_id !== $user->id) {
+        if ($user->usertype === 'admin' && $conversation->admin_id !== $user->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
         
-        if ($user->role !== 'admin' && $conversation->user_id !== $user->id) {
+        if ($user->usertype !== 'admin' && $conversation->user_id !== $user->id) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $message->removeReaction($user->id, $request->emoji);
+        $message->removeReaction($request->emoji, $user->id);
 
         return response()->json([
             'message' => $message->fresh(),

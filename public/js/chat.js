@@ -7,10 +7,16 @@ class ChatApp {
         this.conversations = new Map();
         this.messageContainer = document.getElementById('messagesList');
         this.messageInput = document.getElementById('messageInput');
+        this.scrollContainer = document.getElementById('messagesContainer');
         this.sendBtn = document.getElementById('sendBtn');
         this.conversationsList = document.getElementById('conversationsList');
         
         this.init();
+
+        // Create toast container
+        this.toastContainer = document.createElement('div');
+        this.toastContainer.className = 'chat-toast-container';
+        document.body.appendChild(this.toastContainer);
     }
 
     init() {
@@ -31,6 +37,11 @@ class ChatApp {
         this.messageInput.addEventListener('input', () => {
             this.handleTyping();
             this.autoResizeTextarea();
+            // Save draft per conversation
+            if (this.currentConversationId) {
+                localStorage.setItem(`chat_draft_${this.currentConversationId}`,
+                    this.messageInput.value);
+            }
         });
 
         this.messageInput.addEventListener('keydown', (e) => {
@@ -80,12 +91,46 @@ class ChatApp {
             }
         });
 
+        // Keyboard activation for attachments (accessibility)
+        document.addEventListener('keydown', (e) => {
+            const target = e.target;
+            if ((e.key === 'Enter' || e.key === ' ') && (target.classList?.contains('attachment-image') || target.classList?.contains('attachment-file'))) {
+                e.preventDefault();
+                this.handleAttachmentClick({ target });
+            }
+        });
+
         // Context menu for messages
         document.addEventListener('contextmenu', (e) => {
             if (e.target.closest('.message-bubble')) {
                 e.preventDefault();
                 this.showMessageContextMenu(e);
             }
+        });
+
+        // Drag-and-drop attachment
+        const inputArea = document.querySelector('.message-input-container');
+        inputArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            inputArea.classList.add('drag-over');
+        });
+        inputArea.addEventListener('dragleave', () => {
+            inputArea.classList.remove('drag-over');
+        });
+        inputArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            inputArea.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files && files[0]) {
+                document.getElementById('fileInput').files = files;
+                this.handleFileSelection(files[0]);
+            }
+        });
+
+        // Scroll-to-bottom button
+        this.createScrollToBottomButton();
+        this.scrollContainer.addEventListener('scroll', () => {
+            this.updateScrollButtonVisibility();
         });
     }
 
@@ -195,6 +240,11 @@ class ChatApp {
 
         // Load messages
         await this.loadMessages(conversationId);
+
+        // Load draft if available
+        const draft = localStorage.getItem(`chat_draft_${conversationId}`) || '';
+        this.messageInput.value = draft;
+        this.autoResizeTextarea();
     }
 
     async loadMessages(conversationId, page = 1) {
@@ -228,7 +278,16 @@ class ChatApp {
     }
 
     renderMessages(messages, scrollToBottom = false) {
+        let lastDate = null;
         messages.forEach(message => {
+            const dateStr = new Date(message.created_at).toDateString();
+            if (lastDate !== dateStr) {
+                lastDate = dateStr;
+                const sep = document.createElement('div');
+                sep.className = 'message-date-separator';
+                sep.textContent = this.formatDateLabel(message.created_at);
+                this.messageContainer.appendChild(sep);
+            }
             const messageElement = this.createMessageElement(message);
             this.messageContainer.appendChild(messageElement);
         });
@@ -297,12 +356,14 @@ class ChatApp {
     }
 
     renderReactions(reactions) {
+        const currentUserId = Number(window.chatConfig.userId);
         const reactionElements = Object.entries(reactions).map(([emoji, users]) => {
-            const userReacted = users.some(user => user.id === window.chatConfig.userId);
+            const userIds = Array.isArray(users) ? users.map(Number) : [];
+            const userReacted = userIds.includes(currentUserId);
             return `
                 <div class="reaction-item ${userReacted ? 'user-reacted' : ''}" data-emoji="${emoji}">
                     <span class="reaction-emoji">${emoji}</span>
-                    <span class="reaction-count">${users.length}</span>
+                    <span class="reaction-count">${userIds.length}</span>
                 </div>
             `;
         }).join('');
@@ -363,14 +424,23 @@ class ChatApp {
             fileInput.value = '';
             this.cancelReply();
             this.autoResizeTextarea();
+            // Remove file preview if present and clear drag-over state
+            const inputContainer = document.querySelector('.message-input-container');
+            const existingPreview = inputContainer.querySelector('.file-preview');
+            if (existingPreview) existingPreview.remove();
+            inputContainer.classList.remove('drag-over');
+            // Ensure composer stays in view and focused
+            this.messageInput.focus();
             
-            // Add message to UI (will also come through WebSocket)
+            // Add message to UI immediately
             this.addMessageToUI(data.message);
             this.scrollToBottom();
+            this.showToast('Message sent', 'success');
             
         } catch (error) {
             console.error('Error sending message:', error);
             this.showError('Failed to send message');
+            this.showToast('Failed to send message', 'error');
         } finally {
             this.sendBtn.disabled = false;
         }
@@ -486,10 +556,17 @@ class ChatApp {
 
             if (!response.ok) throw new Error('Failed to update reaction');
 
-            // Update UI will be handled by WebSocket
+            // Update UI immediately by reloading messages for the current conversation
+            if (this.currentConversationId) {
+                const wasNearBottom = this.isNearBottom ? this.isNearBottom() : true;
+                await this.loadMessages(this.currentConversationId);
+                if (wasNearBottom) this.scrollToBottom();
+            }
+            this.showToast('Reaction updated', 'success');
         } catch (error) {
             console.error('Error updating reaction:', error);
             this.showError('Failed to update reaction');
+            this.showToast('Failed to update reaction', 'error');
         }
     }
 
@@ -579,7 +656,7 @@ class ChatApp {
             console.error('Error loading admins:', error);
         }
 
-        new bootstrap.Modal(document.getElementById('newChatModal')).show();
+        new window.bootstrap.Modal(document.getElementById('newChatModal')).show();
     }
 
     async startNewChat() {
@@ -601,7 +678,7 @@ class ChatApp {
             const data = await response.json();
             
             // Close modal
-            bootstrap.Modal.getInstance(document.getElementById('newChatModal')).hide();
+            window.bootstrap.Modal.getInstance(document.getElementById('newChatModal')).hide();
             
             // Reload conversations and select the new one
             await this.loadConversations();
@@ -614,13 +691,8 @@ class ChatApp {
     }
 
     setupWebSocket() {
-        // This would be implemented with Laravel Echo/Pusher
-        // For now, we'll use polling as a fallback
-        if (typeof Echo !== 'undefined') {
-            this.setupEcho();
-        } else {
-            this.setupPolling();
-        }
+        // Simplified: always use polling (no websockets)
+        this.setupPolling();
     }
 
     setupEcho() {
@@ -697,16 +769,22 @@ class ChatApp {
 
             if (response.ok) {
                 const data = await response.json();
-                data.messages.forEach(message => {
-                    this.addMessageToUI(message);
-                });
-                
-                if (data.messages.length > 0) {
-                    this.scrollToBottom();
+                const newMsgs = data.messages || [];
+                if (newMsgs.length > 0) {
+                    const nearBottom = this.isNearBottom();
+                    newMsgs.forEach(message => {
+                        this.addMessageToUI(message);
+                    });
+                    if (nearBottom) {
+                        this.scrollToBottom();
+                    } else {
+                        this.showNewMessagesBanner();
+                        this.updateScrollButtonVisibility();
+                    }
                 }
             }
         } catch (error) {
-            console.error('Error checking for new messages:', error);
+            console.error('Polling error:', error);
         }
     }
 
@@ -729,7 +807,8 @@ class ChatApp {
     }
 
     scrollToBottom() {
-        this.messageContainer.scrollTop = this.messageContainer.scrollHeight;
+        const scroller = this.scrollContainer || this.messageContainer;
+        scroller.scrollTop = scroller.scrollHeight;
     }
 
     showError(message) {
@@ -800,6 +879,54 @@ class ChatApp {
             default:
                 return '<i class="bi bi-clock status-icon"></i>';
         }
+    }
+
+    formatDateLabel(timestamp) {
+        const d = new Date(timestamp);
+        const today = new Date();
+        const isToday = d.toDateString() === today.toDateString();
+        const yesterday = new Date();
+        yesterday.setDate(today.getDate() - 1);
+        const isYesterday = d.toDateString() === yesterday.toDateString();
+        if (isToday) return 'Today';
+        if (isYesterday) return 'Yesterday';
+        return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    createScrollToBottomButton() {
+        this.scrollBtn = document.createElement('button');
+        this.scrollBtn.className = 'scroll-to-bottom d-none';
+        this.scrollBtn.title = 'Scroll to latest';
+        this.scrollBtn.innerHTML = '<i class="bi bi-arrow-down"></i>';
+        document.querySelector('.chat-main').appendChild(this.scrollBtn);
+        this.scrollBtn.addEventListener('click', () => this.scrollToBottom());
+    }
+
+    updateScrollButtonVisibility() {
+        const container = this.scrollContainer || document.getElementById('messagesContainer');
+        const nearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 120;
+        if (nearBottom) {
+            this.scrollBtn.classList.add('d-none');
+        } else {
+            this.scrollBtn.classList.remove('d-none');
+        }
+    }
+
+    isNearBottom() {
+        const container = this.scrollContainer || document.getElementById('messagesContainer');
+        return (container.scrollHeight - container.scrollTop - container.clientHeight) < 120;
+    }
+
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `chat-toast ${type}`;
+        toast.textContent = message;
+        this.toastContainer.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 10);
+        setTimeout(() => {
+            toast.classList.remove('show');
+            setTimeout(() => toast.remove(), 200);
+        }, 2500);
     }
 }
 

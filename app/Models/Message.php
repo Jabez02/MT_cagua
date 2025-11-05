@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Message extends Model
 {
     use HasFactory;
+
+    protected $appends = ['content', 'attachment'];
 
     protected $fillable = [
         'user_id',
@@ -98,6 +101,25 @@ class Message extends Model
     public function replies(): HasMany
     {
         return $this->hasMany(Message::class, 'reply_to_message_id');
+    }
+
+    // Virtual attributes
+    public function getContentAttribute()
+    {
+        return $this->message;
+    }
+
+    public function getAttachmentAttribute()
+    {
+        $att = $this->attachments()->latest()->first();
+        if (!$att) return null;
+
+        return [
+            'url' => Storage::disk('public')->url($att->file_path),
+            'name' => $att->original_name,
+            'size' => (int) $att->file_size,
+            'type' => $att->mime_type,
+        ];
     }
 
     // Scopes
