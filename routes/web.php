@@ -28,6 +28,14 @@ use Illuminate\Support\Facades\Broadcast;
 // Broadcasting Routes
 Broadcast::routes(['middleware' => ['web', 'auth']]);
 
+// Fallback unread count endpoint for authenticated users (works even if not verified)
+Route::middleware(['auth'])->get('/messages/unread-count', function () {
+    $count = \App\Models\Message::where('user_id', Auth::id())
+        ->whereNull('read_at')
+        ->count();
+    return response()->json(['count' => $count]);
+});
+
 // Frontend Routes
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -75,11 +83,10 @@ Route::middleware(['auth', 'verified', 'userMiddleware'])->group(function () {
         Route::patch('/reviews/{review}', [ReviewController::class, 'update'])->name('user.reviews.update');
         Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('user.reviews.destroy');
 
-        // Message Routes
+        // Message Routes (require email verification)
         Route::get('/messages', [MessageController::class, 'index'])->name('user.messages.index');
         Route::get('/messages/create', [MessageController::class, 'create'])->name('user.messages.create');
         Route::post('/messages', [MessageController::class, 'store'])->name('user.messages.store');
-        Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])->name('user.messages.unread-count');
         Route::get('/messages/{message}', [MessageController::class, 'show'])->name('user.messages.show');
         Route::post('/messages/{message}/close', [MessageController::class, 'close'])->name('user.messages.close');
         Route::get('/messages/attachments/{attachment}/download', [MessageController::class, 'downloadAttachment'])->name('user.messages.attachments.download');
@@ -88,6 +95,9 @@ Route::middleware(['auth', 'verified', 'userMiddleware'])->group(function () {
         Route::get('/announcements', [AnnouncementController::class, 'index'])->name('user.announcements.index');
         Route::get('/announcements/{announcement}', [AnnouncementController::class, 'show'])->name('user.announcements.show');
 });
+
+// Provide unread count to authenticated users without requiring email verification
+Route::middleware(['auth','userMiddleware'])->get('/messages/unread-count', [MessageController::class, 'unreadCount'])->name('user.messages.unread-count');
 
 //admin Routes
 Route::middleware(['auth', 'adminMiddleware'])->prefix('admin')->name('admin.')->group(function () {

@@ -3,20 +3,27 @@
 @section('title', 'Chat')
 
 @section('content')
-<div class="chat-container">
+<div class="chat-container" role="main" aria-label="Chat">
     <!-- Chat Sidebar -->
-    <div class="chat-sidebar">
-        <div class="chat-header">
-            <h2>{{ Auth::user()->usertype === 'admin' ? 'Support Chats' : 'Messages' }}</h2>
-            @if(Auth::user()->usertype !== 'admin')
-                <button id="newChatBtn" class="btn-new-chat">
-                    <i class="bi bi-plus-lg"></i>
-                    New Chat
-                </button>
-            @endif
-        </div>
+        <div class="chat-sidebar" role="complementary" aria-label="Conversations">
+            <div class="chat-header">
+                <h2>{{ Auth::user()->usertype === 'admin' ? 'Support Chats' : 'Messages' }}</h2>
+                @if(Auth::user()->usertype !== 'admin')
+                    <button id="newChatBtn" class="btn-new-chat" type="button" aria-haspopup="dialog" aria-controls="newChatModal" aria-label="Start a new chat">
+                        <i class="bi bi-plus-lg" aria-hidden="true"></i>
+                        <span class="visually-hidden">Start new chat</span>
+                        <span aria-hidden="true">New Chat</span>
+                    </button>
+                @endif
+            </div>
+            <div class="conversation-search">
+                <div class="input-group">
+                    <span class="input-group-text" id="conversationSearchIcon"><i class="bi bi-search" aria-hidden="true"></i></span>
+                    <input type="text" id="conversationSearch" class="form-control" placeholder="Search conversations..." aria-label="Search conversations" aria-describedby="conversationSearchIcon">
+                </div>
+            </div>
         
-        <div class="conversations-list" id="conversationsList">
+        <div class="conversations-list" id="conversationsList" role="list" aria-live="polite" aria-label="Conversation list">
             <!-- Conversations will be loaded here -->
         </div>
     </div>
@@ -31,33 +38,38 @@
             </div>
         </div>
 
-        <div class="chat-area" id="chatArea" style="display: none;">
+        <div class="chat-area" id="chatArea" style="display: none;" role="region" aria-label="Conversation">
             <!-- Chat Header -->
             <div class="chat-area-header">
                 <div class="participant-info">
                     <div class="participant-avatar">
-                        <i class="bi bi-person-circle"></i>
+                        <i class="bi bi-person-circle" aria-hidden="true"></i>
+                        <span class="visually-hidden">Participant avatar</span>
                     </div>
                     <div class="participant-details">
                         <h4 id="participantName">Loading...</h4>
-                        <span class="participant-status" id="participantStatus">Online</span>
+                        <span class="participant-status" id="participantStatus" aria-live="polite">Online</span>
                     </div>
                 </div>
                 <div class="chat-actions">
-                    <button class="btn-chat-action" title="More options">
-                        <i class="bi bi-three-dots-vertical"></i>
+                    <button class="btn-chat-action" title="More options" aria-label="More options" type="button">
+                        <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
 
             <!-- Messages Container -->
-            <div class="messages-container" id="messagesContainer">
-                <div class="messages-list" id="messagesList">
+            <div class="messages-container" id="messagesContainer" role="region" aria-label="Messages">
+                <div class="messages-list" id="messagesList" role="log" aria-live="polite" aria-relevant="additions text" aria-atomic="false" tabindex="0">
                     <!-- Messages will be loaded here -->
+                </div>
+                <!-- New messages banner -->
+                <div class="new-messages-banner d-none" id="newMessagesBanner" aria-live="polite">
+                    <button type="button" id="jumpToNewBtn" aria-label="Jump to new messages"><i class="bi bi-arrow-down" aria-hidden="true"></i> <span aria-hidden="true">New messages</span></button>
                 </div>
                 
                 <!-- Typing Indicator -->
-                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                <div class="typing-indicator" id="typingIndicator" style="display: none;" aria-live="polite" aria-atomic="true">
                     <div class="typing-dots">
                         <span></span>
                         <span></span>
@@ -159,10 +171,20 @@
                 <h5 class="modal-title" id="filePreviewTitle">File Preview</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                <div id="filePreviewContent">
+            <div class="modal-body" id="filePreviewBody" aria-live="polite">
+                <div id="filePreviewLoader" class="preview-loader" role="status" aria-label="Loading attachment" hidden>
+                    <div class="spinner-border text-primary" role="status" aria-hidden="true"></div>
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <button type="button" class="preview-nav prev" id="previewPrevBtn" aria-label="Previous attachment">
+                    <i class="bi bi-chevron-left" aria-hidden="true"></i>
+                </button>
+                <div id="filePreviewContent" class="preview-content" role="document" tabindex="0">
                     <!-- File preview content will be loaded here -->
                 </div>
+                <button type="button" class="preview-nav next" id="previewNextBtn" aria-label="Next attachment">
+                    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                </button>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
