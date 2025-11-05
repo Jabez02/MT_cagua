@@ -86,7 +86,7 @@ class ChatApp {
                 this.handleReactionClick(e);
             }
             
-            if (e.target.closest('.attachment-file, .attachment-image')) {
+            if (e.target.closest('.attachment-preview-link')) {
                 this.handleAttachmentClick(e);
             }
         });
@@ -94,7 +94,7 @@ class ChatApp {
         // Keyboard activation for attachments (accessibility)
         document.addEventListener('keydown', (e) => {
             const target = e.target;
-            if ((e.key === 'Enter' || e.key === ' ') && (target.classList?.contains('attachment-image') || target.classList?.contains('attachment-file'))) {
+            if ((e.key === 'Enter' || e.key === ' ') && target.closest('.attachment-preview-link')) {
                 e.preventDefault();
                 this.handleAttachmentClick({ target });
             }
@@ -332,27 +332,18 @@ class ChatApp {
 
     renderAttachment(attachment) {
         const isImage = attachment.type && attachment.type.startsWith('image/');
+        const fileIcon = isImage ? 'bi-image' : 'bi-file-earmark';
         
-        if (isImage) {
-            return `
-                <div class="message-attachment">
-                    <img src="${attachment.url}" alt="${attachment.name}" class="attachment-image" loading="lazy">
+        return `
+            <div class="message-attachment">
+                <div class="attachment-preview-link" data-url="${attachment.url}" data-name="${attachment.name}" data-type="${attachment.type}">
+                    <i class="bi ${fileIcon} attachment-icon"></i>
+                    <span class="attachment-text">Click to view attachment</span>
+                    <span class="attachment-name">${attachment.name}</span>
+                    <span class="attachment-size">${this.formatFileSize(attachment.size)}</span>
                 </div>
-            `;
-        } else {
-            return `
-                <div class="message-attachment">
-                    <div class="attachment-file" data-url="${attachment.url}" data-name="${attachment.name}">
-                        <i class="bi bi-file-earmark file-icon"></i>
-                        <div class="file-info">
-                            <div class="file-name">${attachment.name}</div>
-                            <div class="file-size">${this.formatFileSize(attachment.size)}</div>
-                        </div>
-                        <i class="bi bi-download"></i>
-                    </div>
-                </div>
-            `;
-        }
+            </div>
+        `;
     }
 
     renderReactions(reactions) {
@@ -599,29 +590,96 @@ class ChatApp {
     }
 
     handleAttachmentClick(e) {
-        const attachment = e.target.closest('.attachment-file, .attachment-image');
-        const url = attachment.dataset.url || attachment.src;
-        const name = attachment.dataset.name || 'attachment';
+        const attachment = e.target.closest('.attachment-preview-link');
+        if (!attachment) return;
 
-        if (attachment.classList.contains('attachment-image')) {
+        const url = attachment.dataset.url;
+        const name = attachment.dataset.name;
+        const type = attachment.dataset.type;
+        const isImage = type && type.startsWith('image/');
+
+        if (isImage) {
             this.showImagePreview(url, name);
         } else {
-            this.downloadFile(url, name);
+            // For non-image files, show file info modal with download option
+            this.showFilePreview(url, name, type);
         }
     }
 
     showImagePreview(url, name) {
         const modal = document.getElementById('filePreviewModal');
-        const title = document.getElementById('filePreviewTitle');
-        const content = document.getElementById('filePreviewContent');
+        const modalBody = modal.querySelector('.modal-body');
         const downloadBtn = document.getElementById('downloadFileBtn');
-
-        title.textContent = name;
-        content.innerHTML = `<img src="${url}" alt="${name}" style="max-width: 100%; height: auto;">`;
+        
+        modalBody.innerHTML = `
+            <div class="text-center">
+                <img src="${url}" alt="${name}" class="img-fluid rounded" style="max-height: 70vh;">
+                <div class="mt-3">
+                    <p class="text-muted mb-2">${name}</p>
+                </div>
+            </div>
+        `;
+        
+        // Update the footer download button
         downloadBtn.href = url;
         downloadBtn.download = name;
+        
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
 
-        new bootstrap.Modal(modal).show();
+    showFilePreview(url, name, type) {
+        const modal = document.getElementById('filePreviewModal');
+        const modalBody = modal.querySelector('.modal-body');
+        const downloadBtn = document.getElementById('downloadFileBtn');
+        
+        // Get appropriate icon based on file type
+        const fileIcon = this.getFileIcon(type);
+        
+        modalBody.innerHTML = `
+            <div class="text-center">
+                <div class="file-preview-info">
+                    <i class="bi ${fileIcon} file-preview-icon" style="font-size: 4rem; color: #6c757d;"></i>
+                    <h5 class="mt-3 mb-1">${name}</h5>
+                    <p class="text-muted mb-2">${this.formatFileSize(this.getFileSizeFromUrl(url))}</p>
+                    <p class="text-muted small">${type || 'Unknown file type'}</p>
+                </div>
+            </div>
+        `;
+        
+        // Update the footer download button
+        downloadBtn.href = url;
+        downloadBtn.download = name;
+        
+        const bsModal = new bootstrap.Modal(modal);
+        bsModal.show();
+    }
+
+    getFileIcon(type) {
+        if (!type) return 'bi-file-earmark';
+        
+        const typeMap = {
+            'application/pdf': 'bi-file-earmark-pdf',
+            'application/msword': 'bi-file-earmark-word',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'bi-file-earmark-word',
+            'application/vnd.ms-excel': 'bi-file-earmark-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'bi-file-earmark-excel',
+            'application/vnd.ms-powerpoint': 'bi-file-earmark-ppt',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'bi-file-earmark-ppt',
+            'text/plain': 'bi-file-earmark-text',
+            'text/csv': 'bi-file-earmark-text',
+            'application/zip': 'bi-file-earmark-zip',
+            'application/x-zip-compressed': 'bi-file-earmark-zip',
+            'application/x-rar-compressed': 'bi-file-earmark-zip'
+        };
+        
+        return typeMap[type] || 'bi-file-earmark';
+    }
+
+    getFileSizeFromUrl(url) {
+        // This is a placeholder - in a real app, you might want to get this from the server
+        // For now, we'll return a default size
+        return 1024 * 1024; // 1MB default
     }
 
     downloadFile(url, name) {
@@ -808,7 +866,13 @@ class ChatApp {
 
     scrollToBottom() {
         const scroller = this.scrollContainer || this.messageContainer;
-        scroller.scrollTop = scroller.scrollHeight;
+        // Use requestAnimationFrame to ensure DOM is updated before scrolling
+        requestAnimationFrame(() => {
+            // Add a small delay to ensure any animations are complete
+            setTimeout(() => {
+                scroller.scrollTop = scroller.scrollHeight;
+            }, 50);
+        });
     }
 
     showError(message) {
