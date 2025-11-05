@@ -945,7 +945,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="section-content"
+                                    <div class="section-content">
                                     @if(!$hike)
                                     <!-- Custom Booking Type Selection -->
                                     <div class="row g-4 mb-4">
@@ -1070,7 +1070,7 @@
                                         </div>
                                     </div>
                                     
-                                    <div class="row g-4 mb-3" id="trek-details" @if(!$hike) style="display: none;" @endif>
+                                    <div class="row g-4 mb-3" id="trek-details" {{ !$hike ? 'style=display:none;' : '' }}>
                                         <div class="col-md-6">
                                             <label for="trek_date" class="form-label">
                                                 {{ __('Date of Trek') }}
@@ -1121,7 +1121,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="row g-4 mb-3" id="trail-info-section" @if(!$hike) style="display: none;" @endif>
+                                    <div class="row g-4 mb-3" id="trail-info-section" {{ !$hike ? 'style=display:none;' : '' }}>
                                         <div class="col-md-12">
                                             <label class="form-label" for="trail-info">{{ __('Trail') }}</label>
                                             <div class="bg-light p-3 rounded-3" id="trail-info">

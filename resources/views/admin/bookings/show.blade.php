@@ -555,6 +555,8 @@
 
     .status-display {
         text-align: center;
+        position: relative;
+        z-index: 1;
     }
 
     .status-badge-large {
@@ -567,6 +569,10 @@
         font-size: 1.1rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
     }
 
     .status-badge-large.badge-approved {
@@ -588,6 +594,25 @@
         background: linear-gradient(135deg, #6c757d, #495057);
         color: white;
     }
+
+    .status-badge-large.badge-payment-verification-pending {
+         background: linear-gradient(135deg, #fd7e14, #ffc107);
+         color: #212529;
+         font-size: 0.9rem;
+         padding: 0.5rem 1rem;
+     }
+
+     @media (max-width: 768px) {
+         .status-badge-large {
+             font-size: 0.8rem;
+             padding: 0.4rem 0.8rem;
+         }
+         
+         .status-badge-large.badge-payment-verification-pending {
+             font-size: 0.75rem;
+             padding: 0.4rem 0.8rem;
+         }
+     }
 
     .booking-summary {
         color: white;
@@ -1044,23 +1069,39 @@
                         <div class="row align-items-center">
                             <div class="col-md-3">
                                 <div class="status-display">
-                                    <span class="status-badge-large {{ $booking->status === 'approved' ? 'badge-approved' : ($booking->status === 'rejected' ? 'badge-rejected' : ($booking->status === 'cancelled' ? 'badge-cancelled' : 'badge-pending')) }}">
-                                        <i class="bi bi-{{ $booking->status === 'approved' ? 'check-circle' : ($booking->status === 'rejected' ? 'x-circle' : ($booking->status === 'cancelled' ? 'slash-circle' : 'clock')) }}"></i>
-                                        {{ __(ucfirst($booking->status)) }}
+                                    @php
+                                        $statusClass = 'badge-pending';
+                                        $statusIcon = 'clock';
+                                        $statusText = __(ucfirst($booking->status));
+                                        
+                                        if ($booking->status === 'approved') {
+                                            $statusClass = 'badge-approved';
+                                            $statusIcon = 'check-circle';
+                                        } elseif ($booking->status === 'rejected') {
+                                            $statusClass = 'badge-rejected';
+                                            $statusIcon = 'x-circle';
+                                        } elseif ($booking->status === 'cancelled') {
+                                            $statusClass = 'badge-cancelled';
+                                            $statusIcon = 'slash-circle';
+                                        } elseif ($booking->status === 'payment_verification_pending') {
+                                            $statusClass = 'badge-payment-verification-pending';
+                                            $statusIcon = 'hourglass-split';
+                                            $statusText = 'Payment Verification Pending';
+                                        }
+                                    @endphp
+                                    <span class="status-badge-large {{ $statusClass }}">
+                                        <i class="bi bi-{{ $statusIcon }}"></i>
+                                        {{ $statusText }}
                                     </span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="booking-summary">
-                                    <h3 class="booking-title">{{ $booking->hike ? $booking->hike->trail : ($booking->trail ?? 'Custom Booking') }}</h3>
+                                    <h3 class="booking-title">{{ $booking->trail ?? 'Custom Booking' }}</h3>
                                     <p class="booking-meta">
-                                        @if($booking->hike)
-                                            <i class="bi bi-calendar3"></i> {{ $booking->hike->date->format('M d, Y') }} at {{ $booking->hike->start_time->format('h:i A') }}
-                                        @else
-                                            <i class="bi bi-calendar3"></i> {{ $booking->trek_date ? \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') : 'Date not specified' }}
-                                            @if($booking->start_time)
-                                                at {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}
-                                            @endif
+                                        <i class="bi bi-calendar3"></i> {{ $booking->trek_date ? \Carbon\Carbon::parse($booking->trek_date)->format('M d, Y') : 'Date not specified' }}
+                                        @if($booking->start_time)
+                                            at {{ \Carbon\Carbon::parse($booking->start_time)->format('h:i A') }}
                                         @endif
                                         <span class="mx-2">•</span>
                                         <i class="bi bi-people"></i> {{ $booking->foreign_tourists + $booking->local_tourists }} tourists

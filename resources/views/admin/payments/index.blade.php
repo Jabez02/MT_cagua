@@ -57,6 +57,19 @@
         .header-actions {
             display: flex;
             gap: 1rem;
+            margin-left: auto;
+        }
+
+        .btn-lg {
+            padding: 0.875rem 1.75rem;
+            font-size: 1rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-lg:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .stats-grid {
@@ -335,7 +348,7 @@
             border: 1px solid rgba(245, 158, 11, 0.2);
         }
 
-        .status-failed {
+        .status-rejected {
             background: rgba(239, 68, 68, 0.1);
             color: #dc2626;
             border: 1px solid rgba(239, 68, 68, 0.2);
@@ -479,13 +492,15 @@
     <div class="dashboard-container">
         <div class="container">
             <!-- Page Header -->
-            <div class="page-header">
-                <h1 class="page-title">
-                    <i class="bi bi-credit-card"></i>
-                    Manage Payments
-                </h1>
+            <div class="page-header d-flex justify-content-between align-items-center mb-4">
+                <div class="page-title-section">
+                    <h1 class="page-title mb-0">
+                        <i class="bi bi-credit-card"></i>
+                        Manage Payments
+                    </h1>
+                </div>
                 <div class="header-actions">
-                    <a href="{{ route('admin.payments.export') }}" class="btn btn-success">
+                    <a href="{{ route('admin.payments.export') }}" class="btn btn-success btn-lg">
                         <i class="bi bi-file-earmark-excel"></i>
                         Export to Excel
                     </a>
@@ -541,8 +556,9 @@
                             <option value="">All Status</option>
                             <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pending</option>
                             <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Completed</option>
-                            <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Failed</option>
+                            <option value="rejected" {{ request('status') === 'rejected' ? 'selected' : '' }}>Rejected</option>
                             <option value="refunded" {{ request('status') === 'refunded' ? 'selected' : '' }}>Refunded</option>
+                            <option value="under_review" {{ request('status') === 'under_review' ? 'selected' : '' }}>Under Review</option>
                         </select>
                     </div>
                     <div class="col-md-3">
@@ -550,17 +566,39 @@
                         <select name="payment_method" id="payment_method" class="form-select">
                             <option value="">All Methods</option>
                             @foreach($paymentMethods as $method)
-                                <option value="{{ $method->id }}" {{ request('payment_method') == $method->id ? 'selected' : '' }}>
+                                <option value="{{ $method->code }}" {{ request('payment_method') == $method->code ? 'selected' : '' }}>
                                     {{ $method->name }}
                                 </option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label for="date_from" class="form-label">Date From</label>
+                        <input type="date" name="date_from" id="date_from" class="form-control" value="{{ request('date_from') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="date_to" class="form-label">Date To</label>
+                        <input type="date" name="date_to" id="date_to" class="form-control" value="{{ request('date_to') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="min_amount" class="form-label">Min Amount (₱)</label>
+                        <input type="number" name="min_amount" id="min_amount" class="form-control" placeholder="0.00" step="0.01" value="{{ request('min_amount') }}">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="max_amount" class="form-label">Max Amount (₱)</label>
+                        <input type="number" name="max_amount" id="max_amount" class="form-control" placeholder="0.00" step="0.01" value="{{ request('max_amount') }}">
                     </div>
                     <div class="col-md-3 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="bi bi-search"></i>
                             Filter
                         </button>
+                    </div>
+                    <div class="col-md-3 d-flex align-items-end">
+                        <a href="{{ route('admin.payments.index') }}" class="btn btn-outline-secondary w-100">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Reset
+                        </a>
                     </div>
                 </form>
             </div>
@@ -591,21 +629,48 @@
                             @forelse($payments as $payment)
                             <tr>
                                 <td>
-                                    <span class="payment-id">{{ $payment->payment_number }}</span>
+                                    <span class="payment-id">#{{ $payment->id }}</span>
+                                    @if(!$payment->booking)
+                                        <br><small class="text-danger">No Booking</small>
+                                    @endif
                                 </td>
                                 <td>
-                                    <a href="{{ route('admin.bookings.show', $payment->booking->id) }}" class="booking-link">
-                                        {{ $payment->booking->booking_number }}
-                                    </a>
+                                    @if($payment->booking)
+                                        <a href="{{ route('admin.bookings.show', $payment->booking->id) }}" class="booking-link">
+                                            #{{ $payment->booking->id }}
+                                        </a>
+                                    @else
+                                        <span class="text-muted">No Booking</span>
+                                    @endif
                                 </td>
-                                <td><strong>{{ $payment->booking->user->name ?? 'N/A' }}</strong></td>
+                                <td>
+                                    <strong>{{ $payment->booking && $payment->booking->user ? $payment->booking->user->name : 'Unknown User' }}</strong>
+                                    @if(!$payment->booking || !$payment->booking->user)
+                                        <br><small class="text-danger">Missing User Data</small>
+                                    @endif
+                                </td>
                                 <td>
                                     <span class="amount">₱{{ number_format($payment->amount, 2) }}</span>
                                 </td>
-                                <td>{{ $payment->paymentMethod->name ?? ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</td>
                                 <td>
-                                    <span class="status-badge status-{{ $payment->status }}">
-                                        {{ ucfirst($payment->status) }}
+                                    {{ $payment->paymentMethod ? $payment->paymentMethod->name : ucfirst(str_replace('_', ' ', $payment->payment_method)) }}
+                                    @if(!$payment->payment_method)
+                                        <br><small class="text-danger">No Payment Method</small>
+                                    @endif
+                                </td>
+                                <td>
+                                    @php
+                                        $paymentStatus = 'pending';
+                                        if ($payment->refunded) {
+                                            $paymentStatus = 'refunded';
+                                        } elseif ($payment->rejected_at) {
+                                            $paymentStatus = 'rejected';
+                                        } elseif ($payment->verified_at) {
+                                            $paymentStatus = 'completed';
+                                        }
+                                    @endphp
+                                    <span class="status-badge status-{{ $paymentStatus }}">
+                                        {{ ucfirst($paymentStatus) }}
                                     </span>
                                 </td>
                                 <td><strong>{{ $payment->created_at->format('M d, Y H:i') }}</strong></td>
@@ -614,7 +679,17 @@
                                         <a href="{{ route('admin.payments.show', $payment->id) }}" class="btn btn-sm btn-outline-primary" title="View Payment Details">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        @if($payment->status === 'pending')
+                                        @php
+                                            $paymentStatus = 'pending';
+                                            if ($payment->refunded) {
+                                                $paymentStatus = 'refunded';
+                                            } elseif ($payment->rejected_at) {
+                                                $paymentStatus = 'rejected';
+                                            } elseif ($payment->verified_at) {
+                                                $paymentStatus = 'completed';
+                                            }
+                                        @endphp
+                                        @if($paymentStatus === 'pending' && $payment->booking)
                                         <form action="{{ route('admin.payments.verify', $payment->id) }}" method="POST" class="d-inline verify-form">
                                             @csrf
                                             @method('PATCH')
@@ -629,7 +704,7 @@
                                     </div>
 
                                     <!-- Reject Modal -->
-                                    @if($payment->status === 'pending')
+                                    @if($paymentStatus === 'pending' && $payment->booking)
                                     <div class="modal fade" id="rejectModal{{ $payment->id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ $payment->id }}" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
@@ -645,7 +720,7 @@
                                                             <i class="bi bi-exclamation-triangle text-warning" style="font-size: 3rem;"></i>
                                                             <h5 class="mt-3 mb-2">Reject Payment</h5>
                                                             <p class="text-muted">
-                                                                You are about to reject payment <strong>{{ $payment->payment_number }}</strong>.
+                                                                You are about to reject payment <strong>#{{ $payment->id }}</strong>.
                                                             </p>
                                                         </div>
                                                         <div class="mb-3">

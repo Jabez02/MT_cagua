@@ -96,11 +96,11 @@
         </div>
         <div class="info-row">
             <span class="label">Hike Date:</span>
-            <span class="value">{{ $payment->booking->hike->date->format('F d, Y') }}</span>
+            <span class="value">{{ $payment->booking->trek_date->format('F d, Y') }}</span>
         </div>
         <div class="info-row">
             <span class="label">Start Time:</span>
-            <span class="value">{{ $payment->booking->hike->start_time->format('h:i A') }}</span>
+            <span class="value">{{ $payment->booking->start_time->format('h:i A') }}</span>
         </div>
         <div class="info-row">
             <span class="label">Tourists:</span>

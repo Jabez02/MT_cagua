@@ -310,6 +310,18 @@
             border: 1px solid var(--warning-200);
         }
         
+        .status-refunded {
+            background: var(--info-100);
+            color: var(--info-dark);
+            border: 1px solid var(--info-200);
+        }
+        
+        .status-rejected {
+            background: var(--danger-100);
+            color: var(--danger-dark);
+            border: 1px solid var(--danger-200);
+        }
+        
         .receipt-section {
             background: var(--bg-primary);
             border-radius: var(--radius-2xl);
@@ -708,17 +720,28 @@
                         </div>
                         <div class="info-row">
                             <span class="info-label">Status</span>
-                            <span class="status-badge {{ $payment->verified_at ? 'status-verified' : 'status-pending' }}">
-                                @if($payment->verified_at)
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                    </svg>
-                                @else
-                                    <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path>
-                                    </svg>
-                                @endif
-                                {{ $payment->verified_at ? 'Verified' : 'Pending' }}
+                            @php
+                                $paymentStatus = 'pending';
+                                $statusIcon = 'clock';
+                                $statusText = 'Pending';
+                                
+                                if ($payment->refunded) {
+                                    $paymentStatus = 'refunded';
+                                    $statusIcon = 'arrow-counterclockwise';
+                                    $statusText = 'Refunded';
+                                } elseif ($payment->rejected_at) {
+                                    $paymentStatus = 'rejected';
+                                    $statusIcon = 'x-circle';
+                                    $statusText = 'Rejected';
+                                } elseif ($payment->verified_at) {
+                                    $paymentStatus = 'verified';
+                                    $statusIcon = 'check-circle';
+                                    $statusText = 'Verified';
+                                }
+                            @endphp
+                            <span class="status-badge status-{{ $paymentStatus }}">
+                                <i class="bi bi-{{ $statusIcon }}"></i>
+                                {{ $statusText }}
                             </span>
                         </div>
                         <div class="info-row">
@@ -763,7 +786,7 @@
                         </div>
                         <div class="info-row">
                             <span class="info-label">Hike Date</span>
-                            <span class="info-value">{{ $payment->booking->hike->date->format('M d, Y') }}</span>
+                            <span class="info-value">{{ $payment->booking->trek_date->format('M d, Y') }}</span>
                         </div>
                     </div>
                 </div>
